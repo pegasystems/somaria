@@ -1,41 +1,30 @@
 import { ConsumableBlock } from "./ConsumableBlock";
-import { BlockInput as Input } from "../BlockInput";
+import * as most from "most";
+
+const operations = new Map( [
+	[ "+", ( left, right ) => left + right ],
+	[ "-", ( left, right ) => left - right ],
+	[ "*", ( left, right ) => left * right ],
+	[ "/", ( left, right ) => left / right ],
+	[ "%", ( left, right ) => left % right ],
+	[ "^", ( left, right ) => Math.pow( left, right ) ]
+] );
 
 export class ArithmeticBlock extends ConsumableBlock {
+	protected outputStream: most.Stream<number>;
+	
 	constructor(
-			protected readonly left: Input<number>,
-			protected readonly right: Input<number>,
-			protected readonly operator: Input<string> ) {
+			left: most.Stream<number>,
+			right: most.Stream<number>,
+			operator: most.Stream<string> ) {
 		super();
+		this.outputStream = most.combine<number, number, string, number>( ( left: number, right: number, operator: string ): number => {
+			return operations.get( operator )( left, right );
+		}, left, right, operator );
 	}
 	
-	public getOutputValue( index: number ): number {
-		let value = 0;
-		const left = this.left.getValue();
-		const right = this.right.getValue();
-		switch( this.operator.getValue() ) {
-			case "+":
-				value = left + right; 
-				break;
-			case "-":
-				value = left - right;
-				break;
-			case "*":
-				value = left * right;
-				break;
-			case "/":
-				value = left / right;
-				break;
-			case "%":
-				value = left % right;
-				break;
-			case "^":
-				value = Math.pow( left, right );
-				break;
-			default:
-				break;
-		}
-		return value;
+	public getOutputStream( index: number ): most.Stream<number> {
+		return this.outputStream;
 	}
 
 	public static getDefaultInputValues(): any[] {

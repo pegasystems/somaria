@@ -2,10 +2,10 @@ import { BlockScope } from "./BlockScope";
 import * as DrawableUtils from "./utils/DrawableUtils";
 
 export class IteratorBlockScope extends BlockScope {
-	private iterationCount: number;
+	protected iterationCount: number;
 	public currentIndex: number;
 	protected variables: Map<string, any>;
-	private iterationScopes: BlockScope[];
+	protected iterationScopes: BlockScope[];
 
 	constructor( blocksData: Map<BlockId, BlockJSON>, parent: BlockScope ) {
 		super( blocksData, parent );

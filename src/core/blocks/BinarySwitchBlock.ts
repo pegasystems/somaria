@@ -1,21 +1,21 @@
 import { ConsumableBlock } from "./ConsumableBlock";
-import { BlockInput as Input } from "../BlockInput";
+import * as most from "most";
 
 export class BinarySwitchBlock extends ConsumableBlock {
+	protected outputStream: most.Stream<any>;
+	
 	constructor(
-			protected readonly binarySwitch: Input<number>,
-			protected readonly elseValue: Input<any>,
-			protected readonly thenValue: Input<any> ) {
+			binarySwitch: most.Stream<number>,
+			elseValue: most.Stream<any>,
+			thenValue: most.Stream<any> ) {
 		super();
+		this.outputStream = most.combine<number,any,any,any>( ( binarySwitch, elseValue, thenValue ) => {
+			return binarySwitch !== 0 ? thenValue : elseValue;
+		}, binarySwitch, elseValue, thenValue );
 	}
 	
-	public getOutputValue( index: number ): any {
-		if( this.binarySwitch.getValue() !== 0 ) {
-			return this.thenValue.getValue();
-		}
-		else {
-			return this.elseValue.getValue();
-		}
+	public getOutputStream( index: number ): most.Stream<any> {
+		return this.outputStream;
 	}
 	
 	public static getDefaultInputValues(): any[] {

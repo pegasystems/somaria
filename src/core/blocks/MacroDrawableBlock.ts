@@ -1,40 +1,32 @@
+import { AbstractDrawableBlock } from "./AbstractDrawableBlock";
 import { Block } from "../Block";
 import { Leaf } from "../Leaf";
 import { Drawable } from "../Drawable";
-import { BlockInput as Input } from "../BlockInput";
 import { RenderingContext } from "../RenderingContext";
 import { BlockScope } from "../BlockScope";
 import * as THREE from "three";
+import * as most from "most";
 
-export class MacroDrawableBlock extends Block implements Drawable {
+export class MacroDrawableBlock extends AbstractDrawableBlock {
 	protected scope: BlockScope;
 	protected drawables: BlockId[];
 	protected leafs: BlockId[];
-	protected renderingContext: RenderingContext;
-	protected objects: THREE.Object3D[];
 	
-	constructor( public readonly isEnabled: Input<boolean> ) {
-		super();
-		this.isDrawable = true;
+	constructor( isEnabled: most.Stream<number> ) {
+		super( isEnabled );
 	}
 	
-	public create3dObjects(): THREE.Object3D[] {
+	public getObjects(): THREE.Object3D[] {
 		this.renderingContext.setScope( this.scope );
-		this.objects = [];
+		let objects = [];
 		
 		for( const drawableId of this.drawables ) {
 			const drawableBlock = this.renderingContext.interpretBlockById( drawableId ) as Block & Drawable;
-			if( drawableBlock.isEnabled.getValue() ) {
-				this.objects = this.objects.concat( drawableBlock.create3dObjects() );
-			}
+			objects = objects.concat( drawableBlock.getObjects() );
 		}
 		this.processLeafs();
 		this.renderingContext.setScope( this.scope.parent );
-		return this.objects;
-	}
-
-	public getObjects(): THREE.Object3D[] {
-		return this.objects;
+		return objects;
 	}
 
 	protected processLeafs(): void {
@@ -50,26 +42,20 @@ export class MacroDrawableBlock extends Block implements Drawable {
 		this.leafs = leafs;
 	}
 	
-	protected createScope( blocks: BlockJSON[], parent: BlockScope ): void {
+	protected createScope( blocks: BlockJSON[] = [], parent: BlockScope ): void {
 		this.scope = BlockScope.fromData( blocks, parent );
 	}
 	
-	protected setDrawables( drawables: BlockId[] ): void {
+	protected setDrawables( drawables: BlockId[] = [] ): void {
 		this.drawables = drawables;
-	}
-
-	protected setRenderingContext( renderingContext: RenderingContext ): void {
-		this.renderingContext = renderingContext;
 	}
 	
 	public static fromData( blockType: any, blockData: BlockJSON, renderingContext: RenderingContext ): MacroDrawableBlock {
-		const block = Block.fromData( blockType, blockData, renderingContext ) as MacroDrawableBlock;
+		const block = AbstractDrawableBlock.fromData( blockType, blockData, renderingContext ) as MacroDrawableBlock;
 		
-		block.setRenderingContext( renderingContext );
+		block.createScope( blockData.blocks, renderingContext.getScope() );
 		
-		block.createScope( blockData.blocks || [], renderingContext.getScope() );
-		
-		block.setDrawables( blockData.drawables || [] );
+		block.setDrawables( blockData.drawables );
 		
 		block.setLeafs( blockData.leafs );
 		
@@ -77,6 +63,6 @@ export class MacroDrawableBlock extends Block implements Drawable {
 	}
 	
 	public static getDefaultInputValues(): any[] {
-		return [ true ];
+		return [ 1 ];
 	}
 }

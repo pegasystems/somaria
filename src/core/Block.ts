@@ -1,7 +1,7 @@
 import { Configuration } from "./Configuration";
-import { BlockInput } from "./BlockInput";
 import { BlockInputFactory } from "./BlockInputFactory";
 import { RenderingContext } from "./RenderingContext";
+import * as most from "most";
 
 export abstract class Block {
 	public isDrawable: boolean = false;
@@ -15,7 +15,7 @@ export abstract class Block {
 		return block;
 	}
 	
-	protected static createBlockInputs( blockType: any, blockData: BlockJSON, renderingContext: RenderingContext ): Array<BlockInput<any>> {
+	protected static createBlockInputs( blockType: any, blockData: BlockJSON, renderingContext: RenderingContext ): Array<most.Stream<any>> {
 		const defaultValues = blockType.getDefaultInputValues( renderingContext.config, renderingContext );
 		
 		const blockInputs = new Array( blockType.length );

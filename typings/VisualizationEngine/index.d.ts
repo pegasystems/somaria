@@ -48,3 +48,7 @@ interface Series {
 }
 
 type Attribute = any;
+
+interface SymbolConstructor {
+	readonly observable: symbol;
+}

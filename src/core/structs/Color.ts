@@ -9,6 +9,11 @@ export class Color extends THREE.Color implements Struct {
 		this.a = alpha;
 	}
 	
+	public setAlpha( alpha: number ): Color {
+		this.a = alpha;
+		return this;
+	}
+	
 	public toArray(): number[] {
 		return [ this.r, this.g, this.b, this.a ];
 	}

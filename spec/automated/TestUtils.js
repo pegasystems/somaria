@@ -1,4 +1,5 @@
 global.THREE = require( "three" );
+global.most = require( "most" );
 
 const { BlockInputValue } = require( "../build/core/inputs/BlockInputValue" );
 const { Color } = require( "../build/core/structs/Color" );

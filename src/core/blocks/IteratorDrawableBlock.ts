@@ -1,19 +1,20 @@
 import { Block } from "../Block";
 import { MacroDrawableBlock } from "./MacroDrawableBlock";
-import { BlockInput as Input } from "../BlockInput";
 import { IteratorBlockScope } from "../IteratorBlockScope";
 import { BlockScope } from "../BlockScope";
 import { Drawable } from "../Drawable";
 import { PublishedInputsBlock } from "./PublishedInputsBlock";
 import * as THREE from "three";
+import * as most from "most";
 
 export class IteratorDrawableBlock extends MacroDrawableBlock {
 	protected scope: IteratorBlockScope;
 
 	constructor(
-			isEnabled: Input<boolean>,
-			protected readonly iterationCount: Input<number> ) {
+			isEnabled: most.Stream<number>,
+			iterationCount: most.Stream<number> ) {
 		super( isEnabled );
+		iterationCount.observe( count => this.scope.setIterationCount( Math.max( 0, count ) ) );
 	}
 
 	protected createScope( blocks: BlockJSON[], parent: BlockScope ): void {
@@ -25,32 +26,22 @@ export class IteratorDrawableBlock extends MacroDrawableBlock {
 		}
 	}
 
-	public create3dObjects(): THREE.Object3D[] {
+	public getObjects(): THREE.Object3D[] {
 		let objects = [];
-		const iterationCount = this.sanitizeCount( this.iterationCount.getValue() );
+		const iterationCount = this.scope.getIterationCount();;
 		const oldScope = this.renderingContext.getScope();
-		this.scope.setIterationCount( iterationCount );
 		for( let i = 0; i < iterationCount; i++ ) {
 			this.scope.currentIndex = i;
 			this.renderingContext.setScope( this.scope.getScopeForCurrentIteration() );
 			for( const drawableId of this.drawables ) {
 				const drawableBlock = this.renderingContext.interpretBlockById( drawableId ) as Block & Drawable;
-				if( drawableBlock.isEnabled.getValue() ) {
-					objects = objects.concat( drawableBlock.create3dObjects() );
-				}
+				objects = objects.concat( drawableBlock.getObjects() );
 			}
 			this.processLeafs();
 		}
 		this.renderingContext.setScope( oldScope );
 
 		return objects;
-	}
-
-	private sanitizeCount( value: number ): number {
-		if( value < 0 ) {
-			return 0;
-		}
-		return value;
 	}
 
 	public static getDefaultInputValues(): any[] {

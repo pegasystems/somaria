@@ -1,27 +1,26 @@
 import { Configuration } from "../Configuration";
 import { ConsumableBlock } from "./ConsumableBlock";
-import { BlockInput as Input } from "../BlockInput";
 import { Color } from "../structs/Color";
+import * as most from "most";
 
 export class ColorHexBlock extends ConsumableBlock {
 	protected color: Color;
+	protected colorStream: most.Stream<Color>;
 	
 	constructor(
-			protected readonly rgb: Input<number>,
-			protected readonly opacity: Input<number> ) {
+			hex: most.Stream<number>,
+			alpha: most.Stream<number> ) {
 		super();
-	}
-	
-	public getOutputValue( index: number ): Color {
-		if( this.hasColorChanged() ) {
-			this.color = Color.fromHex( this.rgb.getValue(), this.opacity.getValue() );
-		}
+		this.color = Color.fromRGB( 0, 0, 0, 0 );
 		
-		return this.color;
+		this.colorStream = most.merge<Color>(
+			hex.map( hex => this.color.setHex( hex ) as Color ),
+			alpha.map( alpha => this.color.setAlpha( alpha ) )
+		);
 	}
 	
-	protected hasColorChanged(): boolean {
-		return this.rgb.hasChanged() || this.opacity.hasChanged();
+	public getOutputStream( index: number ): most.Stream<Color> {
+		return this.colorStream;
 	}
 
 	public static getDefaultInputValues( config: Configuration ): any[] {

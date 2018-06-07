@@ -3,6 +3,7 @@ import { BlockFactory } from "./BlockFactory";
 import { Block } from "./Block";
 import { BlockScope } from "./BlockScope";
 import { IteratorBlockScope } from "./IteratorBlockScope";
+import { Signal } from "./Signal";
 import { EventHandler } from "./EventHandler";
 import { EventsManager } from "./EventsManager";
 import { AnimationManager } from "./AnimationManager";
@@ -45,7 +46,7 @@ export class RenderingContext {
 		this.frameIndex = this.frameIndex + 1 >>> 0;
 	}
 
-	public getExternalInputValue( id: string ): any {
+	public getExternalInput( id: string ): Signal {
 		return this.externalInputs.get( id );
 	}
 

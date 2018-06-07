@@ -1,33 +1,52 @@
 import { Block } from "../Block";
-import { BlockInput as Input } from "../BlockInput";
 import { Drawable } from "../Drawable";
 import { RenderingContext } from "../RenderingContext";
 import { InteractionBlock } from "./InteractionBlock";
 import * as THREE from "three";
+import * as most from "most";
 
 export abstract class AbstractDrawableBlock extends Block implements Drawable {
 	private interactionBlock: InteractionBlock;
+	protected renderingContext: RenderingContext;
+	protected isEnabled: boolean;
+	protected objects: THREE.Object3D[];
 
-	constructor( public readonly isEnabled: Input<boolean> ) {
+	constructor( isEnabled: most.Stream<number> ) {
 		super();
 		this.isDrawable = true;
-		this.isEnabled = isEnabled;
+		this.observe( isEnabled.map( isEnabled => this.isEnabled = isEnabled !== 0 ) );
+		this.objects = [];
 	}
 
-	public abstract create3dObjects(): THREE.Object3D[];
-	public abstract getObjects(): THREE.Object3D[];
-
-	protected setupInteractions( object3D: THREE.Object3D ): void {
-		if( this.interactionBlock ) {
-			this.interactionBlock.setDrawable( object3D );
+	public getObjects(): THREE.Object3D[] {
+		if( this.isEnabled ) {
+			return this.objects;
 		}
+		else {
+			return [];
+		}
+	}
+
+	protected setupInteractions( interactionBlock: InteractionBlock ): void {
+		for( const object of this.objects ) {
+			interactionBlock.setDrawable( object );
+		}
+	}
+	
+	protected observe( stream: most.Stream<any> ) {
+		stream.observe( value => this.renderingContext.animationManager.requestFrame() );
+	}
+	
+	protected setRenderingContext( renderingContext: RenderingContext ): void {
+		this.renderingContext = renderingContext;
 	}
 	
 	public static fromData( blockType: any, blockData: BlockJSON, renderingContext: RenderingContext ): AbstractDrawableBlock {
 		const block = Block.fromData( blockType, blockData, renderingContext ) as AbstractDrawableBlock;
 		if( blockData.interactionId ) {
-			block.interactionBlock = renderingContext.interpretBlockById( blockData.interactionId ) as InteractionBlock;
+			block.setupInteractions( renderingContext.interpretBlockById( blockData.interactionId ) as InteractionBlock );
 		}
+		block.setRenderingContext( renderingContext );
 		return block;
 	}
 }

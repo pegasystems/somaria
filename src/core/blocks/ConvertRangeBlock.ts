@@ -1,22 +1,24 @@
 import { ConsumableBlock } from "./ConsumableBlock";
-import { BlockInput as Input } from "../BlockInput";
+import * as most from "most";
 
 export class ConvertRangeBlock extends ConsumableBlock {
+	protected outputStream: most.Stream<number>;
+	
 	constructor(
-			protected readonly value: Input<number>,
-			protected readonly sourceStart: Input<number>,
-			protected readonly sourceEnd: Input<number>,
-			protected readonly targetStart: Input<number>,
-			protected readonly targetEnd: Input<number> ) {
+			value: most.Stream<number>,
+			sourceStart: most.Stream<number>,
+			sourceEnd: most.Stream<number>,
+			targetStart: most.Stream<number>,
+			targetEnd: most.Stream<number> ) {
 		super();
+		this.outputStream = most.combine<number, number, number, number, number, number>(
+			( value: number, sourceStart: number, sourceEnd: number, targetStart: number, targetEnd: number ) => 
+				( value - sourceStart ) / ( sourceEnd - sourceStart ) * ( targetEnd - targetStart ) + targetStart,
+			value, sourceStart, sourceEnd, targetStart, targetEnd );
 	}
 	
-	public getOutputValue( index: number ): number {
-		const sourceStart = this.sourceStart.getValue();
-		const sourceEnd = this.sourceEnd.getValue();
-		const targetStart = this.targetStart.getValue();
-		const targetEnd = this.targetEnd.getValue();
-		return ( this.value.getValue() - sourceStart ) / ( sourceEnd - sourceStart ) * ( targetEnd - targetStart ) + targetStart;
+	public getOutputStream( index: number ): most.Stream<number> {
+		return this.outputStream;
 	}
 	
 	public static getDefaultInputValues(): any[] {

@@ -1,31 +1,53 @@
-import { BlockInput } from "./BlockInput";
-import { BlockInputValue } from "./inputs/BlockInputValue";
-import { BlockInputIndexedReference } from "./inputs/BlockInputIndexedReference";
-import { BlockInputPublishedReference } from "./inputs/BlockInputPublishedReference";
-import { BlockInputThemeAttributeReference } from "./inputs/BlockInputThemeAttributeReference";
-import { BlockInputExternalReference } from "./inputs/BlockInputExternalReference";
 import { RenderingContext } from "./RenderingContext";
+import { PublishableBlock } from "./blocks/PublishableBlock";
+import { ConsumableBlock } from "./blocks/ConsumableBlock";
+import * as most from "most";
+
+function sanitize( value: any, defaultValue: any ): any {
+	if( value === undefined ) {
+		return defaultValue;
+	}
+	else {
+		return value;
+	}
+}
 
 export class BlockInputFactory {
-	public static fromData( input: BlockInputJSON, defaultValue: any, renderingContext: RenderingContext ): BlockInput<any> {
+	protected static Value: string = "Value";
+	protected static Indexed: string = "Indexed";
+	protected static Published: string = "Published";
+	protected static External: string = "External";
+	
+	public static fromData( input: BlockInputJSON, defaultValue: any, renderingContext: RenderingContext ): most.Stream<any> {
 		if( input === undefined ) {
 			input = {
-				accessType: BlockInput.Value
+				accessType: BlockInputFactory.Value,
+				value: undefined
 			};
 		}
 		
-		switch( input.accessType ) {
-			case BlockInput.Published:
-				return new BlockInputPublishedReference( renderingContext, input.blockId, input.reference, defaultValue );
-			case BlockInput.Indexed:
-				return new BlockInputIndexedReference( renderingContext, input.blockId, input.index, defaultValue );
-			case BlockInput.Theme:
-				return new BlockInputThemeAttributeReference( renderingContext, input.themeAttributeType, defaultValue );
-			case BlockInput.External:
-				return new BlockInputExternalReference( renderingContext, input.id, input.themeAttributeType, input.fallbackAccessType, input.value, defaultValue );
-			default:
-			case BlockInput.Value:
-				return new BlockInputValue( input.value, defaultValue );
+		if( input.accessType === BlockInputFactory.Value ) {
+			return most.of( sanitize( input.value, defaultValue ) );
 		}
+		
+		let stream;
+		
+		switch( input.accessType ) {
+			case BlockInputFactory.Published:
+				const pubishableBlock = renderingContext.interpretBlockById( input.blockId ) as PublishableBlock;
+				stream = pubishableBlock.getPublishedOutputStream( input.reference );
+				break;
+			case BlockInputFactory.Indexed:
+				const consumableBlock = renderingContext.interpretBlockById( input.blockId ) as ConsumableBlock;
+				stream = consumableBlock.getOutputStream( input.index );
+				break;
+			case BlockInputFactory.External:
+				stream = renderingContext.getExternalInput( input.id ).getStream();
+				break;
+			default:
+				stream = most.empty();
+		}
+		
+		return stream.map( value => sanitize( value, defaultValue ) );
 	}
 }

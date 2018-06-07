@@ -2,6 +2,7 @@ import "./Polyfills";
 import { Configuration } from "./core/Configuration";
 import { MacroDrawableBlock } from "./core/blocks/MacroDrawableBlock";
 import { RenderingContext } from "./core/RenderingContext";
+import { Signal } from "./core/Signal";
 import { AnimationManager } from "./core/AnimationManager";
 import { EventHandler } from "./core/EventHandler";
 import { ScalingManager } from "./core/ScalingManager";
@@ -21,7 +22,7 @@ export default class Visualization {
 	private eventHandler: EventHandler;
 	private scalingManager: ScalingManager;
 	private renderingContext: RenderingContext;
-	private externalInputs: Map<string, any>;
+	private externalInputs: Map<string, Signal>;
 
 	public scene: THREE.Scene;
 	public camera: THREE.PerspectiveCamera;
@@ -30,7 +31,7 @@ export default class Visualization {
 	constructor( config: Configuration, visualizationJSON: BlockJSON, canvas: HTMLCanvasElement ) {
 		this.config = new Configuration( config || {} as Configuration );
 		this.visualizationJSON = visualizationJSON || {} as BlockJSON;
-		this.externalInputs = new Map<string, any>();
+		this.externalInputs = new Map<string, Signal>();
 
 		this.scene = new THREE.Scene();
 		this.scene.background = new THREE.Color( this.config.backgroundColor );
@@ -71,7 +72,6 @@ export default class Visualization {
 	}
 
 	public render(): void {
-		this.eventHandler.clearRegistered3dObjects();
 		this.scene.children = [];
 
 		this.renderer.clear( true, true, true );
@@ -79,7 +79,7 @@ export default class Visualization {
 
 		this.renderingContext.advanceFrame();
 
-		for( const object of this.block.create3dObjects() ) {
+		for( const object of this.block.getObjects() ) {
 			this.scene.add( object );
 		}
 
@@ -87,7 +87,7 @@ export default class Visualization {
 	}
 
 	public setInputValue( inputId: string, value: any ): void {
-		this.externalInputs.set( inputId, value );
+		this.externalInputs.get( inputId ).set( value );
 	}
 
 	public dispose(): void {

@@ -3,13 +3,14 @@ import typescript from "typescript";
 
 export default {
 	input: "src/Visualization.ts",
-	external: [ "three" ],
+	external: [ "three", "most" ],
 	output: {
 		name: "Visualization",
 		file: "build/Visualization.js",
 		format: "umd",
 		globals: {
-			three: "THREE"
+			three: "THREE",
+			most: "most"
 		}
 	},
 	plugins: [
