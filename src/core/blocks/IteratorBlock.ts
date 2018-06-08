@@ -4,7 +4,6 @@ import { BlockScope } from "../BlockScope";
 import { BlockInput as Input } from "../BlockInput";
 import { IteratorBlockScope } from "../IteratorBlockScope";
 import { RenderingContext } from "../RenderingContext";
-import { PublishedInputsBlock } from "./PublishedInputsBlock";
 
 export class IteratorBlock extends MacroBlock implements Leaf {
 	protected scope: IteratorBlockScope;
@@ -47,11 +46,6 @@ export class IteratorBlock extends MacroBlock implements Leaf {
 	
 	protected createScope( blocks: BlockJSON[], parent: BlockScope ): void {
 		this.scope = IteratorBlockScope.fromData( blocks, parent );
-		
-		const publishedInputsBlockData = this.scope.getBlockData( "PublishedInputs" );
-		if( publishedInputsBlockData !== undefined ) {
-			this.scope.setBlock( "PublishedInputs", PublishedInputsBlock.fromData( PublishedInputsBlock, publishedInputsBlockData, this.renderingContext ) );
-		}
 	}
 
 	public execute(): void {

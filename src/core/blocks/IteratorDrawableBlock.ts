@@ -3,7 +3,6 @@ import { MacroDrawableBlock } from "./MacroDrawableBlock";
 import { IteratorBlockScope } from "../IteratorBlockScope";
 import { BlockScope } from "../BlockScope";
 import { Drawable } from "../Drawable";
-import { PublishedInputsBlock } from "./PublishedInputsBlock";
 import * as THREE from "three";
 import * as most from "most";
 
@@ -19,11 +18,6 @@ export class IteratorDrawableBlock extends MacroDrawableBlock {
 
 	protected createScope( blocks: BlockJSON[], parent: BlockScope ): void {
 		this.scope = IteratorBlockScope.fromData( blocks, parent );
-		
-		const publishedInputsBlockData = this.scope.getBlockData( "PublishedInputs" );
-		if( publishedInputsBlockData !== undefined ) {
-			this.scope.setBlock( "PublishedInputs", PublishedInputsBlock.fromData( PublishedInputsBlock, publishedInputsBlockData, this.renderingContext ) );
-		}
 	}
 
 	public getObjects(): THREE.Object3D[] {

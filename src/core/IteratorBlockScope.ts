@@ -26,12 +26,7 @@ export class IteratorBlockScope extends BlockScope {
 		}
 		
 		while( this.iterationScopes.length < iterationCount ) {
-			const iterationScope = new BlockScope( this.blocksData, this );
-			const publishedInputsBlock = this.getBlock( "PublishedInputs" );
-			if( publishedInputsBlock !== undefined ) {
-				iterationScope.setBlock( "PublishedInputs", publishedInputsBlock );
-			}
-			this.iterationScopes.push( iterationScope );
+			this.iterationScopes.push( new BlockScope( this.blocksData, this ) );
 		}
 	}
 
