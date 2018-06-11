@@ -22,7 +22,7 @@ export default class Visualization {
 	private eventHandler: EventHandler;
 	private scalingManager: ScalingManager;
 	private renderingContext: RenderingContext;
-	private externalInputs: Map<string, Signal>;
+	private externalInputs: Map<string, Signal<any>>;
 
 	public scene: THREE.Scene;
 	public camera: THREE.PerspectiveCamera;
@@ -31,7 +31,7 @@ export default class Visualization {
 	constructor( config: Configuration, visualizationJSON: BlockJSON, canvas: HTMLCanvasElement ) {
 		this.config = new Configuration( config || {} as Configuration );
 		this.visualizationJSON = visualizationJSON || {} as BlockJSON;
-		this.externalInputs = new Map<string, Signal>();
+		this.externalInputs = new Map<string, Signal<any>>();
 
 		this.scene = new THREE.Scene();
 		this.scene.background = new THREE.Color( this.config.backgroundColor );

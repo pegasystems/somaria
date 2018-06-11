@@ -10,7 +10,7 @@ export class InteractionBlock extends ConsumableBlock {
 	private static MOUSE_OVER: number = 1;
 
 	private renderingContext: RenderingContext;
-	private outputSignals: Signal[];
+	private outputSignals: Signal<number>[];
 	
 	constructor() {
 		super();

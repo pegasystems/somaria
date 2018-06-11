@@ -1,9 +1,9 @@
 import * as most from "most";
 
-class SignalSubscription implements most.Subscription<any> {
+class SignalSubscription<T> implements most.Subscription<T> {
 	public closed: boolean;
 	
-	constructor( protected readonly subscribers: Set<most.Subscriber<any>>, protected readonly subscriber: most.Subscriber<any> ) {
+	constructor( protected readonly subscribers: Set<most.Subscriber<T>>, protected readonly subscriber: most.Subscriber<T> ) {
 		this.closed = false;
 	}
 	
@@ -13,11 +13,11 @@ class SignalSubscription implements most.Subscription<any> {
 	}
 }
 
-export class Signal implements most.Observable<any> {
-	protected subscribers: Set<most.Subscriber<any>>;
-	protected stream: most.Stream<any>;
+export class Signal<T> implements most.Observable<T> {
+	protected subscribers: Set<most.Subscriber<T>>;
+	protected stream: most.Stream<T>;
 	
-	constructor( initialValue: any ) {
+	constructor( initialValue: T ) {
 		this.subscribers = new Set();
 		this.stream = most.from( this ).skipRepeats().startWith( initialValue );
 	}
@@ -26,18 +26,18 @@ export class Signal implements most.Observable<any> {
 		return this;
 	}
 	
-	subscribe( subscriber: most.Subscriber<any> ): SignalSubscription {
+	subscribe( subscriber: most.Subscriber<T> ): SignalSubscription<T> {
 		this.subscribers.add( subscriber );
 		return new SignalSubscription( this.subscribers, subscriber );
 	}
 	
-	set( value: any ) {
+	set( value: T ): void {
 		this.subscribers.forEach( subscriber => {
 			subscriber.next( value );
 		} );
 	}
 	
-	getStream(): most.Stream<any> {
+	getStream(): most.Stream<T> {
 		return this.stream;
 	}
 }

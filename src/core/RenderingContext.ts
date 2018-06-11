@@ -46,7 +46,7 @@ export class RenderingContext {
 		this.frameIndex = this.frameIndex + 1 >>> 0;
 	}
 
-	public getExternalInput( id: string ): Signal {
+	public getExternalInput( id: string ): Signal<any> {
 		return this.externalInputs.get( id );
 	}
 
