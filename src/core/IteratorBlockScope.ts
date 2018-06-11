@@ -1,8 +1,9 @@
 import { BlockScope } from "./BlockScope";
 import * as DrawableUtils from "./utils/DrawableUtils";
+import * as most from "most";
 
 export class IteratorBlockScope extends BlockScope {
-	protected iterationCount: number;
+	public iterationCount: most.Stream<number>;
 	public currentIndex: number;
 	protected variables: Map<string, any>;
 	protected iterationScopes: BlockScope[];
@@ -11,12 +12,16 @@ export class IteratorBlockScope extends BlockScope {
 		super( blocksData, parent );
 		this.variables = new Map<string, any>();
 		this.iterationScopes = [];
+		this.currentIndex = 0;
+	}
+	
+	public setIterationCount( iterationCount: most.Stream<number> ) {
+		this.iterationCount = iterationCount.tap( count => this.setBlockScopeCount( count ) );
+		this.iterationCount.drain();
 	}
 
-	public setIterationCount( iterationCount: number ): void {
-		this.iterationCount = iterationCount;
-		
-		while( this.iterationScopes.length > iterationCount ) {
+	protected setBlockScopeCount( count: number ): void {
+		while( this.iterationScopes.length > count ) {
 			const scope = this.iterationScopes.pop();
 			for( const drawable of scope.getAllDrawables() ) {
 				for( const object3D of drawable.getObjects() ) {
@@ -25,17 +30,16 @@ export class IteratorBlockScope extends BlockScope {
 			}
 		}
 		
-		while( this.iterationScopes.length < iterationCount ) {
+		while( this.iterationScopes.length < count ) {
+			this.currentIndex = this.iterationScopes.length;
 			this.iterationScopes.push( new BlockScope( this.blocksData, this ) );
 		}
+		
+		this.currentIndex = 0;
 	}
 
 	public setVariableValue( name: string, value: any ): void {
 		this.variables.set( name, value );
-	}
-
-	public getIterationCount(): number {
-		return this.iterationCount;
 	}
 
 	public getVariableValue( name: string ): any {

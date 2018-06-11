@@ -5,15 +5,14 @@ import { IteratorBlockScope } from "../IteratorBlockScope";
 
 export abstract class IteratorScopedBlock extends ConsumableBlock {
 	protected renderingContext: RenderingContext;
+	protected blockId: string;
+	protected iteratorScope: IteratorBlockScope;
 
-	constructor( protected readonly blockId: string, protected readonly iteratorScope: IteratorBlockScope ) {
-		super();
-	}
-	
 	public static fromData( blockType: any, blockData: BlockJSON, renderingContext: RenderingContext ): IteratorScopedBlock {
-		const blockInputs = Block.createBlockInputs( blockType, blockData, renderingContext );
-		const block: IteratorScopedBlock = new blockType( blockData.id, renderingContext.getIteratorBlockScope(), ...blockInputs );
+		const block = ConsumableBlock.fromData( blockType, blockData, renderingContext ) as IteratorScopedBlock;
 		block.renderingContext = renderingContext;
+		block.blockId = blockData.id;
+		block.iteratorScope = renderingContext.getIteratorBlockScope();
 		return block;
 	}
 }

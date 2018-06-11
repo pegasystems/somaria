@@ -8,23 +8,25 @@ import * as most from "most";
 
 export class IteratorDrawableBlock extends MacroDrawableBlock {
 	protected scope: IteratorBlockScope;
+	protected iterationCountStream: most.Stream<number>;
+	protected iterationCount: number;
 
 	constructor(
 			isEnabled: most.Stream<number>,
 			iterationCount: most.Stream<number> ) {
 		super( isEnabled );
-		iterationCount.observe( count => this.scope.setIterationCount( Math.max( 0, count ) ) );
+		this.iterationCountStream = iterationCount.map( count => this.iterationCount = Math.max( 0, count ) );
 	}
 
-	protected createScope( blocks: BlockJSON[], parent: BlockScope ): void {
+	protected createScope( blocks: BlockJSON[] = [], parent: BlockScope ): void {
 		this.scope = IteratorBlockScope.fromData( blocks, parent );
+		this.scope.setIterationCount( this.iterationCountStream );
 	}
 
 	public getObjects(): THREE.Object3D[] {
 		let objects = [];
-		const iterationCount = this.scope.getIterationCount();;
 		const oldScope = this.renderingContext.getScope();
-		for( let i = 0; i < iterationCount; i++ ) {
+		for( let i = 0; i < this.iterationCount; i++ ) {
 			this.scope.currentIndex = i;
 			this.renderingContext.setScope( this.scope.getScopeForCurrentIteration() );
 			for( const drawableId of this.drawables ) {

@@ -1,20 +1,20 @@
 import { IteratorScopedBlock } from "./IteratorScopedBlock";
+import { RenderingContext } from "../RenderingContext";
+import * as most from "most";
 
 export class IteratorVariablesBlock extends IteratorScopedBlock {
-	protected static ITERATION_COUNT: number = 0;
-	protected static CURRENT_INDEX: number = 1;
+	protected outputStreams: most.Stream<number>[];
 
-	public getOutputValue( index: number ): number {
-		let outputValue;
-		if( this.iteratorScope ) {
-			if( index === IteratorVariablesBlock.ITERATION_COUNT ) {
-				outputValue = this.iteratorScope.getIterationCount();
-			}
-			else if( index === IteratorVariablesBlock.CURRENT_INDEX ) {
-				outputValue = this.iteratorScope.currentIndex;
-			}
-		}
-
-		return outputValue;
+	public getOutputStream( index: number ): most.Stream<number> {
+		return this.outputStreams[ index ];
+	}
+	
+	public static fromData( blockType: any, blockData: BlockJSON, renderingContext: RenderingContext ): IteratorVariablesBlock {
+		const block = IteratorScopedBlock.fromData( blockType, blockData, renderingContext ) as IteratorVariablesBlock;
+		block.outputStreams = [
+			block.iteratorScope.iterationCount,
+			most.of( block.iteratorScope.currentIndex )
+		];
+		return block;
 	}
 }
