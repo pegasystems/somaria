@@ -1,13 +1,13 @@
 import { ConsumableBlock } from "./ConsumableBlock";
-import { BlockInput as Input } from "../BlockInput";
+import * as most from "most";
 
 export class NumberBlock extends ConsumableBlock {
-	constructor( protected readonly value: Input<number> ) {
+	constructor( protected readonly value: most.Stream<number> ) {
 		super();
 	}
 	
-	public getOutputValue( index: number ): number {
-		return this.value.getValue();
+	public getOutputStream( index: number ): most.Stream<number> {
+		return this.value;
 	}
 	
 	public static getDefaultInputValues(): any[] {
