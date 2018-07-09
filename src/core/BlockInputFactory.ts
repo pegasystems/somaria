@@ -45,7 +45,7 @@ export class BlockInputFactory {
 				stream = renderingContext.getExternalInput( input.id ).getStream();
 				break;
 			default:
-				stream = most.empty();
+				stream = most.of( defaultValue );
 		}
 		
 		return stream.map( value => sanitize( value, defaultValue ) );

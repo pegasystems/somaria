@@ -1,9 +1,7 @@
-require( "./TestUtils" );
+const most = require( "most" );
+const { itAsync, verifyStream } = require( "./TestUtils" );
 const { BlockInputFactory } = require( "../build/core/BlockInputFactory.js" );
-const { BlockInputValue } = require( "../build/core/inputs/BlockInputValue.js" );
-const { BlockInputIndexedReference } = require( "../build/core/inputs/BlockInputIndexedReference.js" );
-const { BlockInputPublishedReference } = require( "../build/core/inputs/BlockInputPublishedReference.js" );
-const { BlockInputThemeAttributeReference } = require( "../build/core/inputs/BlockInputThemeAttributeReference.js" );
+const { Signal } = require( "../build/core/Signal.js" );
 
 const Mock = {
 	Value: {
@@ -26,47 +24,103 @@ const Mock = {
 	Theme: {
 		accessType: "Theme",
 		themeAttributeType: "FontFamily"
+	},
+	External: {
+		accessType: "External",
+		id: "ExternalInputID"
+	},
+	Invalid: {
+		accssType: undefined
 	}
 };
 
 const defaultValue = { value: 1 };
 const defaultThemeAttributeReferenceValue = "Color palette";
 
+async function verifyIndexed( value, expectation ) {
+	const block = {
+		getOutputStream: jasmine.createSpy( "getOutputStream" ).and.returnValue( most.of( value ) )
+	};
+	const renderingContext = {
+		interpretBlockById: jasmine.createSpy( "interpretBlockById" ).and.returnValue( block )
+	};
+	const input = BlockInputFactory.fromData( Mock.Indexed, defaultValue, renderingContext );
+	expect( renderingContext.interpretBlockById ).toHaveBeenCalledWith( Mock.Indexed.blockId );
+	expect( block.getOutputStream ).toHaveBeenCalledWith( Mock.Indexed.index );
+	await verifyStream( input, expectation );
+}
+
+async function verifyPublished( value, expectation ) {
+	const block = {
+		getPublishedOutputStream: jasmine.createSpy( "getPublishedOutputStream" ).and.returnValue( most.of( value ) )
+	};
+	const renderingContext = {
+		interpretBlockById: jasmine.createSpy( "interpretBlockById" ).and.returnValue( block )
+	};
+	const input = BlockInputFactory.fromData( Mock.Published, defaultValue, renderingContext );
+	expect( renderingContext.interpretBlockById ).toHaveBeenCalledWith( Mock.Published.blockId );
+	expect( block.getPublishedOutputStream ).toHaveBeenCalledWith( Mock.Published.reference );
+	await verifyStream( input, expectation );
+}
+
+async function verifyExternal( value, expectation ) {
+	const renderingContext = {
+		getExternalInput: jasmine.createSpy( "interpretBlockById" ).and.returnValue( new Signal( value ) )
+	};
+	const input = BlockInputFactory.fromData( Mock.External, defaultValue, renderingContext );
+	expect( renderingContext.getExternalInput ).toHaveBeenCalledWith( Mock.External.id );
+	await verifyStream( input.take( 1 ), expectation );
+}
+
 describe( "BlockInputFactory", () => {
-	it( "builds a BlockInputValue object", () => {
-		let input = BlockInputFactory.fromData( Mock.Value, defaultValue );
-		expect( input ).toEqual( jasmine.any( BlockInputValue ) );
-		expect( input.defaultValue ).toBe( defaultValue );
-		expect( input.value ).toBe( Mock.Value.value );
+	itAsync( "builds a default value stream when no input is found", async () => {
+		const input = BlockInputFactory.fromData( undefined, defaultValue );
+		await verifyStream( input, defaultValue );
 	} );
 	
-	it( "builds a BlockInputValue object with no defined value", () => {
-		let input = BlockInputFactory.fromData( Mock.ValueNoValue, defaultValue );
-		expect( input ).toEqual( jasmine.any( BlockInputValue ) );
-		expect( input.defaultValue ).toBe( defaultValue );
-		expect( input.value ).toBe( defaultValue );
+	itAsync( "builds a default value stream when accessType is invalid", async () => {
+		const input = BlockInputFactory.fromData( Mock.Invalid, defaultValue );
+		await verifyStream( input, defaultValue );
 	} );
 	
-	it( "builds a BlockInputIndexedReference object", () => {
-		let input = BlockInputFactory.fromData( Mock.Indexed, defaultValue );
-		expect( input ).toEqual( jasmine.any( BlockInputIndexedReference ) );
-		expect( input.blockId ).toBe( Mock.Indexed.blockId );
-		expect( input.index ).toBe( Mock.Indexed.index );
-		expect( input.defaultValue ).toBe( defaultValue );
+	itAsync( "builds a stream from a value input", async () => {
+		const input = BlockInputFactory.fromData( Mock.Value, defaultValue );
+		await verifyStream( input, Mock.Value.value );
 	} );
 	
-	it( "builds a BlockInputPublishedReference object", () => {
-		let input = BlockInputFactory.fromData( Mock.Published, defaultValue );
-		expect( input ).toEqual( jasmine.any( BlockInputPublishedReference ) );
-		expect( input.blockId ).toBe( Mock.Published.blockId );
-		expect( input.reference ).toBe( Mock.Published.reference );
-		expect( input.defaultValue ).toBe( defaultValue );
+	itAsync( "builds a stream from a value input with no value", async () => {
+		const input = BlockInputFactory.fromData( Mock.ValueNoValue, defaultValue );
+		await verifyStream( input, defaultValue );
+	} );
+	
+	itAsync( "builds a stream from an indexed input", async () => {
+		await verifyIndexed( 11, 11 );
+	} );
+	
+	itAsync( "builds a stream from an indexed input returning undefined", async () => {
+		await verifyIndexed( undefined, defaultValue );
+	} );
+	
+	itAsync( "builds a stream from a published input", async () => {
+		await verifyPublished( 12, 12 );
+	} );
+	
+	itAsync( "builds a stream from a published input returning undefined", async () => {
+		await verifyPublished( undefined, defaultValue );
+	} );
+	
+	itAsync( "builds a stream from an external input", async () => {
+		await verifyExternal( 13, 13 );
+	} );
+	
+	itAsync( "builds a stream from an external input with no value", async () => {
+		await verifyExternal( undefined, defaultValue );
 	} );
 
-	it( "builds a BlockInputThemeAttributeReference object", () => { 
+	/*it( "builds a BlockInputThemeAttributeReference object", () => { 
 		let input = BlockInputFactory.fromData( Mock.Theme, defaultThemeAttributeReferenceValue );
 		expect( input ).toEqual( jasmine.any( BlockInputThemeAttributeReference ) );
 		expect( input.themeAttributeType ).toBe( Mock.Theme.themeAttributeType );
 		expect( input.defaultValue ).toBe( defaultThemeAttributeReferenceValue );
-	} );
+	} );*/
 } );

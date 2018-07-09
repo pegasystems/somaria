@@ -1,6 +1,7 @@
 {
 	"spec_dir": "spec",
 	"spec_files": [
+		"automated/BlockInputFactorySpec.js",
 		"automated/structs/*Spec.js",
 		"automated/meterials/*Spec.js",
 		"automated/blocks/ColorHexBlockSpec.js",
