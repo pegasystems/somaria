@@ -1,4 +1,4 @@
-const { makeBlock, Point } = require( "../TestUtils" );
+const { itAsync, makeBlock, verifyStream, Point } = require( "../TestUtils" );
 const { BlockTypes } = require( "../../build/core/BlockTypes" );
 const PointBlock = BlockTypes.get( "Point" );
 
@@ -11,32 +11,13 @@ describe( "PointBlock", () => {
 		expect( PointBlock.getDefaultInputValues( undefined ) ).toEqual( [ 0, 0, 0 ] );
 	} );
 	
-	it( "builds a point object", () => {
+	itAsync( "builds a point object", async () => {
 		let block = makeBlock( PointBlock, [ 1, 2, 3 ] );
-		let point = block.getOutputValue( 0 );
-		expect( point ).toEqual( Point( 1, 2, 3 ) );
+		await verifyStream( block.getOutputStream( 0 ), Point( 1, 2, 3 ) );
 	} );
 	
-	it( "builds a different point object", () => {
+	itAsync( "builds a different point object", async () => {
 		let block = makeBlock( PointBlock, [ 6, 5, 4 ] );
-		let point = block.getOutputValue( 0 );
-		expect( point ).toEqual( Point( 6, 5, 4 ) );
-	} );
-	
-	describe( "at runtime", () => {
-		let block;
-		
-		beforeAll( () => {
-			block = makeBlock( PointBlock, [] );
-			block.getOutputValue( 0 );
-		} );
-		
-		for( const input of [ "x", "y", "z" ] ) {
-			it( `changes texture on new ${input} value`, () => {
-				block[ input ].valueHasChanged = true;
-				expect( block.hasPointChanged() ).toBe( true );
-				block[ input ].valueHasChanged = false;
-			} );
-		}
+		await verifyStream( block.getOutputStream( 0 ), Point( 6, 5, 4 ) );
 	} );
 } );

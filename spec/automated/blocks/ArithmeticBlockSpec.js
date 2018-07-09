@@ -1,4 +1,4 @@
-const { makeBlock } = require( "../TestUtils" );
+const { itAsync, makeBlock, verifyStream } = require( "../TestUtils" );
 const { BlockTypes } = require( "../../build/core/BlockTypes" );
 const ArithmeticBlock = BlockTypes.get( "Arithmetic" );
 
@@ -11,38 +11,38 @@ describe( "ArithmeticBlock", () => {
 		expect( ArithmeticBlock.getDefaultInputValues( {} ) ).toEqual( [ 0, 0, "+" ] );
 	} );
 	
-	it( "adds two numbers", () => {
-		let block = makeBlock( ArithmeticBlock, [ 2, 2, "+" ] );
-		expect( block.getOutputValue( 0 ) ).toBe( 4 );
+	itAsync( "adds two numbers", async () => {
+		const block = makeBlock( ArithmeticBlock, [ 2, 2, "+" ] );
+		await verifyStream( block.getOutputStream( 0 ), 4 );
 	} );
 	
-	it( "subtracts two numbers", () => {
+	itAsync( "subtracts two numbers", async () => {
 		let block = makeBlock( ArithmeticBlock, [ 3, 2, "-" ] );
-		expect( block.getOutputValue( 0 ) ).toBe( 1 );
+		await verifyStream( block.getOutputStream( 0 ), 1 );
 	} );
 	
-	it( "multiplies two numbers", () => {
+	itAsync( "multiplies two numbers", async () => {
 		let block = makeBlock( ArithmeticBlock, [ 3, 2, "*" ] );
-		expect( block.getOutputValue( 0 ) ).toBe( 6 );
+		await verifyStream( block.getOutputStream( 0 ), 6 );
 	} );
 	
-	it( "divides two numbers", () => {
+	itAsync( "divides two numbers", async () => {
 		let block = makeBlock( ArithmeticBlock, [ 8, 2, "/" ] );
-		expect( block.getOutputValue( 0 ) ).toBe( 4 );
+		await verifyStream( block.getOutputStream( 0 ), 4 );
 	} );
 	
-	it( "finds the remainder given two numbers", () => {
+	itAsync( "finds the remainder given two numbers", async () => {
 		let block = makeBlock( ArithmeticBlock, [ 10, 3, "%" ] );
-		expect( block.getOutputValue( 0 ) ).toBe( 1 );
+		await verifyStream( block.getOutputStream( 0 ), 1 );
 	} );
 	
-	it( "raises the first number to the power of the second number", () => {
+	itAsync( "raises the first number to the power of the second number", async () => {
 		let block = makeBlock( ArithmeticBlock, [ 4, 3, "^" ] );
-		expect( block.getOutputValue( 0 ) ).toBe( 64 );
+		await verifyStream( block.getOutputStream( 0 ), 64 );
 	} );
 	
-	it( "falls back to zero", () => {
+	itAsync( "falls back to addition", async () => {
 		let block = makeBlock( ArithmeticBlock, [ 2, 2, "?" ] );
-		expect( block.getOutputValue( 0 ) ).toBe( 0 );
+		await verifyStream( block.getOutputStream( 0 ), 4 );
 	} );
 } );

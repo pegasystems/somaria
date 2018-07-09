@@ -1,7 +1,15 @@
 {
 	"spec_dir": "spec",
 	"spec_files": [
-		"automated/**/*Spec.js"
+		"automated/structs/*Spec.js",
+		"automated/meterials/*Spec.js",
+		"automated/blocks/ColorHexBlockSpec.js",
+		"automated/blocks/ArithmeticBlockSpec.js",
+		"automated/blocks/BinarySwitchBlockSpec.js",
+		"automated/blocks/ConvertRangeBlockSpec.js",
+		"automated/blocks/NumberBlockSpec.js",
+		"automated/blocks/PointBlockSpec.js",
+		"automated/blocks/SampleBlockSpec.js"
 	],
 	"stopSpecOnExpectationFailure": false,
 	"random": false

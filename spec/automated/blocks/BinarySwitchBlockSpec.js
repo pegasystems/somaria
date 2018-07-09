@@ -1,4 +1,4 @@
-const { makeBlock } = require( "../TestUtils" );
+const { itAsync, makeBlock, verifyStream } = require( "../TestUtils" );
 const { BlockTypes } = require( "../../build/core/BlockTypes" );
 const BinarySwitchBlock = BlockTypes.get( "BinarySwitch" );
 
@@ -11,13 +11,13 @@ describe( "BinarySwitchBlock", () => {
 		expect( BinarySwitchBlock.getDefaultInputValues( {} ) ).toEqual( [ 0, 0, 1 ] );
 	} );
 	
-	it( "should return true value when switch value is set to true", () => {
+	itAsync( "should return true value when switch value is set to true", async () => {
 		let block = makeBlock( BinarySwitchBlock, [ 1, 0, 2 ] );
-		expect( block.getOutputValue( 0 ) ).toBe( 2 );
+		await verifyStream( block.getOutputStream( 0 ), 2 );
 	} );
 	
-	it( "should return false value when switch value is set to false", () => {
+	itAsync( "should return false value when switch value is set to false", async () => {
 		let block = makeBlock( BinarySwitchBlock, [ 0, 0, 2 ] );
-		expect( block.getOutputValue( 0 ) ).toBe( 0 );
+		await verifyStream( block.getOutputStream( 0 ), 0 );
 	} );
 } );

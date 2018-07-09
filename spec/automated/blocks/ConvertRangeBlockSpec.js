@@ -1,10 +1,10 @@
-const { makeBlock } = require( "../TestUtils" );
+const { itAsync, makeBlock, verifyStream } = require( "../TestUtils" );
 const { BlockTypes } = require( "../../build/core/BlockTypes" );
 const ConvertRangeBlock = BlockTypes.get( "ConvertRange" );
 
-function verify( valueToScale, sourceStart, sourceEnd, targetStart, targetEnd, expectedResult ) {
+async function verify( valueToScale, sourceStart, sourceEnd, targetStart, targetEnd, expectedResult ) {
 	const block = makeBlock( ConvertRangeBlock, [ valueToScale, sourceStart, sourceEnd, targetStart, targetEnd ] );
-	expect( block.getOutputValue( 0 ) ).toBe( expectedResult );
+	await verifyStream( block.getOutputStream( 0 ), expectedResult );
 }
 
 describe( "ConvertRangeBlock", () => { 
@@ -16,43 +16,43 @@ describe( "ConvertRangeBlock", () => {
 		expect( ConvertRangeBlock.getDefaultInputValues( {} ) ).toEqual( [ 0, 0, 100, 0, 100 ] );
 	} );
 
-	it( "returns the same value", () => {
+	itAsync( "returns the same value", async () => {
 		verify( 10, 0, 100, 0, 100, 10 );
 	} );
 	
-	it( "returns a decimal value", () => {
+	itAsync( "returns a decimal value", async () => {
 		verify( 20, 10, 110, 0, 1, 0.1 );
 	} );
 	
-	it( "returns a negative value", () => {
+	itAsync( "returns a negative value", async () => {
 		verify( 20, 10, 110, 0, -100, -10 );
 	} );
 	
-	it( "returns a negative decimal", () => {
+	itAsync( "returns a negative decimal", async () => {
 		verify( 50, 0, 100, -1, -2, -1.5 );
 	} );
 	
-	it( "returns a positive value", () => {
+	itAsync( "returns a positive value", async () => {
 		verify( -105, -60, -120, 50, 150, 125 );
 	} );
 	
-	it( "scales based on a floating point range", () => {
+	itAsync( "scales based on a floating point range", async () => {
 		verify( 90, 0, 180, 0, Math.PI, Math.PI / 2 );
 	} );
 	
-	it( "scales down", () => {
+	itAsync( "scales down", async () => {
 		verify( 7, 0, 10, 10, 0, 3 );
 	} );
 	
-	it( "scales down 2", () => {
+	itAsync( "scales down 2", async () => {
 		verify( 7, 10, 0, 0, 10, 3 );
 	} );
 	
-	it( "scales up 1", () => {
+	itAsync( "scales up 1", async () => {
 		verify( 3, 0, 10, 10, 0, 7 );
 	} );
 	
-	it( "scales up 2", () => {
+	itAsync( "scales up 2", async () => {
 		verify( 3, 10, 0, 0, 10, 7 );
 	} );
 } );

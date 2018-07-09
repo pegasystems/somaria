@@ -1,15 +1,18 @@
-global.THREE = require( "three" );
-global.most = require( "most" );
-
-const { BlockInputValue } = require( "../build/core/inputs/BlockInputValue" );
+const THREE = require( "three" );
+const most = require( "most" );
 const { Color } = require( "../build/core/structs/Color" );
+const { BlockInputFactory } = require( "../build/core/BlockInputFactory" );
 
-module.exports.makeBlock = ( blockType, inputValues, inputs = [], renderingContext ) => {
-	const defaultInputValues = blockType.getDefaultInputValues( { color: module.exports.Color( 0, 1 ), origin: module.exports.Point( 0, 0, 0 ) }, renderingContext );
-	for( let i = 0; i < defaultInputValues.length; i++ ) {
-		inputs.push( new BlockInputValue( inputValues[ i ], defaultInputValues[ i ] ) );
-	}
-	return new blockType( ...inputs );
+module.exports.itAsync = function( title, asyncTest ) {
+	it( title, done => asyncTest().then( done ).catch( done.fail ) );
+};
+
+module.exports.streamToArray = async function( stream ) {
+	return await stream.reduce( ( array, value ) => [ ...array, value ], [] );
+};
+
+module.exports.verifyStream = async function( stream, ...expectations ) {
+	expect( await module.exports.streamToArray( stream ) ).toEqual( expectations );
 };
 
 module.exports.makeCanvas = ( width, height ) => {
@@ -34,6 +37,23 @@ module.exports.AngleDegrees = ( x, y, z ) => new THREE.Vector3(
 	module.exports.degToRad( y ),
 	module.exports.degToRad( z )
 );
+
+const defaultConfig = {
+	color: module.exports.Color( 0, 1 ),
+	origin: module.exports.Point( 0, 0, 0 )
+};
+
+module.exports.makeBlock = ( blockType, inputValues, inputs = [], renderingContext ) => {
+	const defaultInputValues = blockType.getDefaultInputValues( defaultConfig, renderingContext );
+	for( let i = 0; i < defaultInputValues.length; i++ ) {
+		const inputData = {
+			accessType: "Value",
+			value: inputValues[ i ]
+		};
+		inputs.push( BlockInputFactory.fromData( inputData, defaultInputValues[ i ], undefined ) );
+	}
+	return new blockType( ...inputs );
+};
 
 // number of decimal places
 module.exports.precision = 13;

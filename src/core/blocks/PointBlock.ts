@@ -3,7 +3,6 @@ import * as THREE from "three";
 import * as most from "most";
 
 export class PointBlock extends ConsumableBlock {
-	protected point: Cartesian;
 	protected pointStream: most.Stream<Cartesian>;
 	
 	constructor(
@@ -12,9 +11,9 @@ export class PointBlock extends ConsumableBlock {
 			z: most.Stream<number> ) {
 		super();
 		
-		this.point = new THREE.Vector3();
+		const point = new THREE.Vector3();
 		
-		this.pointStream = most.combine<number,number,number,Cartesian>( ( x, y, z ) => this.point.set( x, y, z ), x, y, z );
+		this.pointStream = most.combine<number,number,number,Cartesian>( ( x, y, z ) => point.set( x, y, z ), x, y, z );
 	}
 	
 	public getOutputStream( index: number ): most.Stream<Cartesian> {

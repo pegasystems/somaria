@@ -1,7 +1,9 @@
 import { ConsumableBlock } from "./ConsumableBlock";
 import * as most from "most";
 
-const operations = new Map( [
+type Operation = ( left: number, right: number ) => number;
+
+const operations = new Map<string, Operation>( [
 	[ "+", ( left, right ) => left + right ],
 	[ "-", ( left, right ) => left - right ],
 	[ "*", ( left, right ) => left * right ],
@@ -18,9 +20,18 @@ export class ArithmeticBlock extends ConsumableBlock {
 			right: most.Stream<number>,
 			operator: most.Stream<string> ) {
 		super();
-		this.outputStream = most.combine<number, number, string, number>( ( left: number, right: number, operator: string ): number => {
-			return operations.get( operator )( left, right );
-		}, left, right, operator );
+		
+		const operation = operator.map( operator => {
+			let operation = operations.get( operator );
+			if( operation === undefined ) {
+				operation = operations.get( "+" );
+			}
+			return operation;
+		} )
+		
+		this.outputStream = most.combine<number, number, Operation, number>( ( left: number, right: number, operation: Operation ): number => {
+			return operation( left, right );
+		}, left, right, operation );
 	}
 	
 	public getOutputStream( index: number ): most.Stream<number> {

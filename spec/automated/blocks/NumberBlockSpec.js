@@ -1,4 +1,4 @@
-const { makeBlock } = require( "../TestUtils" );
+const { itAsync, makeBlock, verifyStream } = require( "../TestUtils" );
 const { BlockTypes } = require( "../../build/core/BlockTypes" );
 const NumberBlock = BlockTypes.get( "Number" );
 
@@ -11,13 +11,13 @@ describe( "NumberBlock", () => {
 		expect( NumberBlock.getDefaultInputValues( {} ) ).toEqual( [ 0 ] );
 	} );
 
-	it( "outputs a number", () => {
+	itAsync( "outputs a number", async () => {
 		let block = makeBlock( NumberBlock, [ 1 ] );
-		expect( block.getOutputValue( 0 ) ).toBe( 1 );
+		await verifyStream( block.getOutputStream( 0 ), 1 );
 	} );
 
-	it( "builds a different point object", () => {
+	itAsync( "outputs a different number", async () => {
 		let block = makeBlock( NumberBlock, [ -2 ] );
-		expect( block.getOutputValue( 0 ) ).toBe( -2 );
+		await verifyStream( block.getOutputStream( 0 ), -2 );
 	} );
 } );
