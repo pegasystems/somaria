@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"outDir": "spec/build/",
+		"target": "es6",
+		"module": "commonjs",
+		"lib": [ "es6", "dom" ],
+		"typeRoots": [ "node_modules/@types", "typings" ]
+	},
+	"include": [
+		"src/Visualization.ts"
+	]
+}

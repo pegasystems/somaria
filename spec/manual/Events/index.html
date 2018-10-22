@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="../../../node_modules/three/build/three.js"></script>
+		<script src="../../../build/Visualization.js"></script>
+		<script src="./events.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pubsub-js/1.7.0/pubsub.min.js"></script>
+	</head>
+	<body>
+		<canvas style="width:500px;height:500px;"></canvas>
+		<script>
+			const callback = function( msg, data ) {
+	    			alert( msg + ": " + data );
+			};
+			PubSub.subscribe("testBroadcastBlock", callback);
+			
+			Visualization.setPubSub( {
+				...PubSub,
+				subscribe: function( topic, callback ) {
+					return PubSub.subscribe( topic, function( topic, data ) {
+						callback( data );
+					} );
+				}
+			} );
+			const visualization = new Visualization( null, eventsJSON, document.body.firstElementChild );
+			visualization.render();
+		</script>
+		<br>
+		<button onclick='PubSub.publish("testMessage", "Hello David")'>Click me</button>
+	</body>
+</html>

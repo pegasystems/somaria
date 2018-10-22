@@ -1,0 +1,32 @@
+{
+  "name": "somaria",
+  "version": "1.0.0",
+  "description": "Model driven data visualization engine",
+  "main": "build/Visualization.js",
+  "scripts": {
+    "test": "jasmine",
+    "build": "tsc && rollup -c || true",
+    "clean": "rm -rf ./build/* ./spec/build/*",
+    "lint": "tslint --fix 'src/**/*.ts' typings/*.d.ts 'spec/automated/**/*.js' spec/manual/*.js || true",
+    "coverage": "slim-cover . spec/build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pegasystems/somaria.git"
+  },
+  "author": "Trevor Behlman <tsbehlman@gmail.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@types/three": "0.92.21",
+    "rollup": "^0.66.0",
+    "rollup-plugin-typescript": "^0.8.1",
+    "three": "^0.96.0",
+    "typescript": "^3.0.3"
+  },
+  "devDependencies": {
+    "jasmine": "^3.2.0",
+    "slim-cover": "^1.2.0",
+    "tslint": "^5.5.0",
+    "tslint-eslint-rules": "^5.4.0"
+  }
+}

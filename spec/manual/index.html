@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="../../node_modules/three/build/three.js"></script>
+		<script src="../../build/Visualization.js"></script>
+		<script src="./input.js"></script>
+		<script src="./titleinput.js"></script>
+		<style>
+			canvas {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas style="width:500px;height:50px;"></canvas>
+		<canvas style="width:500px;height:500px;"></canvas>
+		<script>
+			var config = {
+				backgroundColor: 0xFFFFFF,
+				height: 50,
+				meshColor: 0x1D2427
+			}
+			var titleVisualization = new Visualization( config, titleVisualizationJSON, document.body.children[0] );
+			titleVisualization.render();
+			var visualization = new Visualization( null, visualizationJSON, document.body.children[1] );
+			visualization.render();
+		</script>
+	</body>
+</html>

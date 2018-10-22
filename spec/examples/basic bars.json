@@ -1,0 +1,78 @@
+{
+	"drawables": [ "Drawable Iterator 1" ],
+	"blocks": [
+		{
+			"id": "Published inputs", "type": "PublishedInputs",
+			"publishedOutputs": [
+				{
+					"id": "Values",
+					"accessType": "External",
+					"type": "list",
+					"fallbackAccessType": "Value",
+					"value": []
+				}
+			]
+		},
+		{
+			"id": "Count 1", "type": "Count",
+			"inputs": [
+				{ "accessType": "Published", "blockId": "Published inputs", "reference": "Values" }
+			]
+		},
+		{
+			"id": "Drawable Iterator 1", "type": "IteratorDrawable",
+			"drawables": [ "Rectangle 1" ],
+			"inputs": [
+				{ "accessType": "Value" },
+				{ "accessType": "Indexed", "blockId": "Count 1", "index": 0 }
+			],
+			"blocks": [
+				{ "id": "Iterator variables", "type": "IteratorVariables" },
+				{
+					"id": "Published inputs", "type": "PublishedInputs",
+					"publishedOutputs": [
+						{ "id": "Values", "accessType": "Published", "blockId": "Published inputs", "reference": "Values" }
+					]
+				},
+				{
+					"id": "Convert range 1", "type": "ConvertRange",
+					"inputs": [
+						{ "accessType": "Indexed", "blockId": "Iterator variables", "index": 1 },
+						{ "accessType": "Value", "value": 0 },
+						{ "accessType": "Indexed", "blockId": "Iterator variables", "index": 0 },
+						{ "accessType": "Value", "value": -130 },
+						{ "accessType": "Value", "value": 150 }
+					]
+				},
+				{
+					"id": "Lookup by index 1", "type": "LookupIndexed",
+					"inputs": [
+						{ "accessType": "Published", "blockId": "Published inputs", "reference": "Values" },
+						{ "accessType": "Indexed", "blockId": "Iterator variables", "index": 1 }
+					]
+				},
+				{
+					"id": "Point 1", "type": "Point",
+					"inputs": [
+						{ "accessType": "Indexed", "blockId": "Convert range 1", "index": 0 },
+						{ "accessType": "Value", "value": 0 },
+						{ "accessType": "Value", "value": 0 }
+					]
+				},
+				{
+					"id": "Rectangle 1", "type": "Rectangle",
+					"inputs": [
+						{ "accessType": "Value" },
+						{ "accessType": "Indexed", "blockId": "Point 1", "index": 0 },
+						{ "accessType": "Value", "value": 50 },
+						{ "accessType": "Indexed", "blockId": "Lookup by index 1", "index": 0 },
+						{ "accessType": "Value" },
+						{ "accessType": "Value" },
+						{ "accessType": "Value", "value": "center" },
+						{ "accessType": "Value", "value": "min" }
+					]
+				}
+			]
+		}
+	]
+}
