@@ -1,13 +1,10 @@
 language: node_js
 node_js:
   - "node"
-cache:
-  directories:
-    - node_modules
 install:
   - npm install -g codecov
   - npm install -g istanbul
-  - npm install
+  - npm ci
 script:
   - npm run build
   - istanbul cover node_modules/jasmine/bin/jasmine.js
