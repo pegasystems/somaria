@@ -10,7 +10,6 @@ install:
   - npm install
 script:
   - npm run build
-  - npm test
   - istanbul cover node_modules/jasmine/bin/jasmine.js
 after_success:
   - codecov
