@@ -12,6 +12,5 @@ script:
   - npm run build
   - npm test
   - istanbul cover node_modules/jasmine/bin/jasmine.js
-  - codecov
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - codecov
