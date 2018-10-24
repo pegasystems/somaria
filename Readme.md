@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pegasystems/somaria.svg?branch=master)](https://travis-ci.org/pegasystems/somaria)
+
 <h2 align="center">
     <img alt="Somaria logo" src="spec/images/somaria-block.png">
     <p>Somaria</p>
