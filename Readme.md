@@ -4,8 +4,12 @@
 </h2>
 <p align="center">Model-driven data visualization</p>
 <p align="center">
-    [![Build status](https://travis-ci.org/pegasystems/somaria.svg?branch=master)](https://travis-ci.org/pegasystems/somaria)
-    [![Code coverage](https://codecov.io/gh/pegasystems/somaria/branch/master/graph/badge.svg)](https://codecov.io/gh/pegasystems/somaria)
+	<a href="https://travis-ci.org/pegasystems/somaria">
+		<img alt="Build status" src="https://travis-ci.org/pegasystems/somaria.svg?branch=master">
+	</a>
+	<a href="https://codecov.io/gh/pegasystems/somaria">
+		<img alt="Code coverage" src="https://codecov.io/gh/pegasystems/somaria/branch/master/graph/badge.svg">
+	</a>
 </p>
 
 ### Introduction
