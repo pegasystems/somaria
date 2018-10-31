@@ -1,0 +1,13 @@
+# Authors ordered by first contribution.
+ 
+Trevor Behlman <tsbehlman@gmail.com>
+Siva Shankar Reddy Chenchu <shiva.osiris@gmail.com>
+Tristan Peck <Tristan.Peck.1@gmail.com>
+Jasmine Bhambra <jasmine.k.bhambra@gmail.com>
+Sol Eun <soleun@gmail.com>
+Mike Inman <Mike.Inman@pega.com>
+Alexander Golin <agolin95@gmail.com>
+Karen Zheung <karenzheung@gmail.com>
+Marco Duran <mdduran@outlook.com>
+Grzegorz Bogusz <g.bogusz93@gmail.com>
+Winston Boucher <wboucher26@gmail.com>
