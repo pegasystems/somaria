@@ -21,6 +21,7 @@ export class IteratorDrawableBlock extends MacroDrawableBlock {
 	protected createScope( blocks: BlockJSON[] = [], parent: BlockScope ): void {
 		this.scope = IteratorBlockScope.fromData( blocks, parent );
 		this.scope.setIterationCount( this.iterationCountStream );
+		this.observe( this.scope.iterationCount );
 	}
 
 	public getObjects(): THREE.Object3D[] {

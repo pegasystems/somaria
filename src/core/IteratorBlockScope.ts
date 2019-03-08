@@ -17,7 +17,6 @@ export class IteratorBlockScope extends BlockScope {
 	
 	public setIterationCount( iterationCount: most.Stream<number> ) {
 		this.iterationCount = iterationCount.tap( count => this.setBlockScopeCount( count ) );
-		this.iterationCount.drain();
 	}
 
 	protected setBlockScopeCount( count: number ): void {
@@ -32,7 +31,8 @@ export class IteratorBlockScope extends BlockScope {
 		
 		while( this.iterationScopes.length < count ) {
 			this.currentIndex = this.iterationScopes.length;
-			this.iterationScopes.push( new BlockScope( this.blocksData, this ) );
+			const newScope = new BlockScope( this.blocksData, this );
+			this.iterationScopes.push( newScope );
 		}
 		
 		this.currentIndex = 0;

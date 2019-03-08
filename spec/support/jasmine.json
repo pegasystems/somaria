@@ -1,9 +1,17 @@
 {
 	"spec_dir": "spec",
 	"spec_files": [
+		"automated/VisualizationSpec.js",
 		"automated/BlockInputFactorySpec.js",
+		"automated/AnimationManagerSpec.js",
+		"automated/EventsManagerSpec.js",
+		"automated/EventHandlerSpec.js",
+		"automated/ConfigurationSpec.js",
+		"automated/DrawableUtilsSpec.js",
+		"automated/ScalingManagerSpec.js",
+		"automated/BlockFactorySpec.js",
 		"automated/structs/*Spec.js",
-		"automated/meterials/*Spec.js",
+		"automated/materials/*Spec.js",
 		"automated/blocks/ColorHexBlockSpec.js",
 		"automated/blocks/ArithmeticBlockSpec.js",
 		"automated/blocks/BinarySwitchBlockSpec.js",

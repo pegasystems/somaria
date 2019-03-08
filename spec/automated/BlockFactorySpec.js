@@ -1,4 +1,4 @@
-require( "./TestUtils" );
+const { itAsync, verifyStream } = require( "./TestUtils" );
 const { BlockFactory } = require( "../build/core/BlockFactory.js" );
 
 const Mock = {
@@ -11,7 +11,7 @@ const Mock = {
 
 describe( "BlockFactory", () => {
 	it( "fills in missing input", () => {
-		let block = BlockFactory.fromData( Mock.NumberBlock, {} );
-		expect( block.getOutputValue( 0 ) ).toBe( 0 );
+		const block = BlockFactory.fromData( Mock.NumberBlock, {} );
+		verifyStream( block.getOutputStream( 0 ), 0 );
 	} );
 } );

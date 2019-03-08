@@ -26,7 +26,7 @@ exports.Rect3 = {
 	id: "Rect3",
 	type: "Rectangle",
 	inputs: [
-		{ accessType: "Value", value: false },
+		{ accessType: "Value", value: 0 },
 		{ accessType: "Value" },
 		{ accessType: "Value", value: 40 },
 		{ accessType: "Value", value: 40 },
@@ -128,7 +128,7 @@ exports.Rect4 = {
 	id: "Rect4",
 	type: "Rectangle",
 	inputs: [
-		{ accessType: "Value", value: true },
+		{ accessType: "Value" },
 		{ accessType: "Value" },
 		{ accessType: "Published", blockId: "AreaAndCircumference", reference: "Area" },
 		{ accessType: "Published", blockId: "AreaAndCircumference", reference: "Circumference" },
@@ -181,7 +181,7 @@ exports.Rect5 = {
 	id: "Rect5",
 	type: "Rectangle",
 	inputs: [
-		{ accessType: "Value", value: true },
+		{ accessType: "Value" },
 		{ accessType: "Value" },
 		{ accessType: "Value", value: 10 },
 		{ accessType: "Published", blockId: "NestedCircumference", reference: "Circumference" },
@@ -234,7 +234,7 @@ exports.IteratorDrawable_1 = {
 	id: "IteratorDrawable_1",
 	type: "IteratorDrawable",
 	inputs: [
-		{ accessType: "Value", value: true },
+		{ accessType: "Value" },
 		{ accessType: "Value", value: -1 }
 	],
 	blocks: [
@@ -247,7 +247,7 @@ exports.IteratorDrawable = {
 	id: "IteratorDrawable",
 	type: "IteratorDrawable",
 	inputs: [
-		{ accessType: "Value", value: true },
+		{ accessType: "Value" },
 		{ accessType: "Value", value: 10 }
 	],
 	blocks: [
@@ -350,7 +350,7 @@ exports.Rect6 = {
 	id: "Rect6",
 	type: "Rectangle",
 	inputs: [
-		{ accessType: "Value", value: true },
+		{ accessType: "Value" },
 		{ accessType: "Value" },
 		{ accessType: "Published", blockId: "PublishedInputs", reference: "Width" },
 		{ accessType: "Published", blockId: "PublishedInputs", reference: "Height" },
@@ -427,7 +427,7 @@ exports.Rect7 = {
 	type: "Rectangle",
 	interactionId: "Interaction1",
 	inputs: [
-		{ accessType: "Value", value: true },
+		{ accessType: "Value" },
 		{ accessType: "Value" },
 		{ accessType: "Indexed", blockId: "BinarySwitch1", index: 0 },
 		{ accessType: "Indexed", blockId: "BinarySwitch1", index: 0 },
@@ -441,7 +441,7 @@ exports.Rect9 = {
 	type: "Rectangle",
 	interactionId: "Interaction2",
 	inputs: [
-		{ accessType: "Value", value: true },
+		{ accessType: "Value" },
 		{ accessType: "Value" },
 		{ accessType: "Indexed", blockId: "BinarySwitch3", index: 0 },
 		{ accessType: "Indexed", blockId: "BinarySwitch3", index: 0 },
@@ -455,7 +455,7 @@ exports.Rect8 = {
 	type: "Rectangle",
 	interactionId: "Interaction1",
 	inputs: [
-		{ accessType: "Value", value: true },
+		{ accessType: "Value" },
 		{ accessType: "Value" },
 		{ accessType: "Indexed", blockId: "BinarySwitch2", index: 0 },
 		{ accessType: "Indexed", blockId: "BinarySwitch2", index: 0 },
@@ -468,7 +468,7 @@ exports.IteratorDrawable1 = {
 	id: "IteratorDrawable1",
 	type: "IteratorDrawable",
 	inputs: [
-		{ accessType: "Value", value: true },
+		{ accessType: "Value" },
 		{ accessType: "Value", value: 10 }
 	],
 	blocks: [
@@ -540,7 +540,7 @@ exports.Rect10 = {
 	type: "Rectangle",
 	interactionId: "Interaction1",
 	inputs: [
-		{ accessType: "Value", value: true },
+		{ accessType: "Value" },
 		{ accessType: "Value" },
 		{ accessType: "Value" },
 		{ accessType: "Value" },
@@ -552,7 +552,7 @@ exports.IteratorDrawable2 = {
 	id: "IteratorDrawable2",
 	type: "IteratorDrawable",
 	inputs: [
-		{ accessType: "Value", value: true },
+		{ accessType: "Value" },
 		{ accessType: "Indexed", blockId: "BinarySwitch4", index: 0 }
 	],
 	blocks: [

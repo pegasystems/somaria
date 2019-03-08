@@ -1,4 +1,5 @@
 const { customMatchers, Color } = require( "../TestUtils" );
+const THREE = require( "three" );
 const { TexturedMaterial } = require( "../../build/core/materials/TexturedMaterial" );
 
 describe( "TexturedMaterial", () => {

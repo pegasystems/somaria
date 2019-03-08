@@ -1,4 +1,5 @@
 require( "./TestUtils" );
+const THREE = require( "three" );
 const DrawableUtils = require( "../build/core/utils/DrawableUtils" );
 
 describe( "DrawableUtils", () => {

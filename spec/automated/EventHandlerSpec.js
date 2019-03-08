@@ -1,4 +1,5 @@
 require( "./TestUtils" );
+const THREE = require( "three" );
 const { EventHandler } = require( "../build/core/EventHandler" );
 
 describe( "EventHandler", () => {

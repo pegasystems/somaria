@@ -1,4 +1,5 @@
 require( "./TestUtils" );
+const THREE = require( "three" );
 const Visualization = require( "../build/Visualization.js" ).default;
 const { Color } = require( "../build/core/structs/Color" );
 const { Theme } = require( "../build/core/Theme" );
@@ -19,7 +20,12 @@ describe( "Visualization", () => {
 	let eventsManager;
 	
 	beforeAll( () => {
-		global.window = {};
+		global.window = {
+			requestAnimationFrame: function( callback ) {
+				callback();
+				return 0;
+			}
+		};
 		WebGLRenderer = spyOn( THREE, "WebGLRenderer" ).and.callFake( function( options ) {
 			rendererOptions = options;
 			return {

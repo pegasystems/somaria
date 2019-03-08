@@ -14,7 +14,8 @@ export abstract class AbstractDrawableBlock extends Block implements Drawable {
 	constructor( isEnabled: most.Stream<number> ) {
 		super();
 		this.isDrawable = true;
-		this.observe( isEnabled.map( isEnabled => this.isEnabled = isEnabled !== 0 ) );
+		this.isEnabled = false;
+		this.observe( isEnabled.map( isEnabled => this.isEnabled = ( isEnabled !== 0 ) ) );
 		this.objects = [];
 	}
 

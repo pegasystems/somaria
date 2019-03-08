@@ -1,3 +1,4 @@
+const THREE = require( "three" );
 const { ScalingManager } = require( "../build/core/ScalingManager.js" );
 
 describe( "ScalingManager", () => {

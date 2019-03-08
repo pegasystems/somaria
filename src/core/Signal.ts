@@ -1,6 +1,6 @@
 import * as most from "most";
 
-class SignalSubscription<T> implements most.Subscription<T> {
+export class SignalSubscription<T> implements most.Subscription<T> {
 	public closed: boolean;
 	
 	constructor( protected readonly subscribers: Set<most.Subscriber<T>>, protected readonly subscriber: most.Subscriber<T> ) {
