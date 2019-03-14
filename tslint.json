@@ -25,16 +25,16 @@
 		"max-line-length": [ true, 180 ],
 		"object-literal-sort-keys": false,
 		"eofline": false,
-		"no-trailing-whitespace": false,
 		"no-bitwise": false,
 		"no-empty": false,
 		
-		"typedef": [ true, "call-signature", "arrow-call-signature", "parameter", "arrow-parameter", "member-variable-declaration", "member-variable-declaration", "property-declaration" ],
+		"typedef": [ true, "call-signature", "arrow-call-signature", "parameter", "arrow-parameter", "member-variable-declaration", "property-declaration" ],
 		"member-ordering": [ true, { "order": [ "static-field", "instance-field", "constructor" ] } ],
 		
 		"interface-name": false,
 		"no-namespace": false,
-		"ordered-imports": false
+		"ordered-imports": false,
+		"arrow-parens": false
 	},
 	"jsRules": {
 		"indent": [ true, "tabs" ],
@@ -60,7 +60,6 @@
 		"max-line-length": [ true, 180 ],
 		"object-literal-sort-keys": false,
 		"eofline": false,
-		"no-trailing-whitespace": false,
 		"no-bitwise": false,
 		"no-empty": false
 	}
