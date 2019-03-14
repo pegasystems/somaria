@@ -1,65 +1,61 @@
-import { Leaf } from "../Leaf";
 import { MacroBlock } from "./MacroBlock";
 import { BlockScope } from "../BlockScope";
-import { BlockInput as Input } from "../BlockInput";
+import { BlockInputFactory } from "../BlockInputFactory";
 import { IteratorBlockScope } from "../IteratorBlockScope";
-import { RenderingContext } from "../RenderingContext";
+import { Sink } from "../Sink";
+import { Stream } from "most";
 
-export class IteratorBlock extends MacroBlock implements Leaf {
+export class IteratorBlock extends MacroBlock {
 	protected scope: IteratorBlockScope;
-	protected leafs: BlockId[];
+	protected publishedOutputSinks: Map<string, Sink<any>>;
 
-	constructor(
-		protected readonly iterationCount: Input<number> ) {
+	constructor( protected iterationCount: Stream<number> ) {
 		super();
-	}
-
-	public getPublishedOutputValue( reference: string ): any {
-		const output = this.publishedOutputs.get( reference );
-		
-		if( !output.isCached() ) {
-			const oldScope = this.renderingContext.getScope();
-			const iterationCount = this.iterationCount.getValue();
-			this.scope.setIterationCount( iterationCount );
-			for( let i = 0; i < iterationCount; i++ ) {
-				this.scope.currentIndex = i;
-				this.renderingContext.setScope( this.scope.getScopeForCurrentIteration() );
-				this.publishedOutputs.forEach( ( output: Input<any>, reference: BlockId ) => {
-					if( i === iterationCount - 1 ) {
-						output.getValue();
-					}
-					else {
-						output.getUncachedValue();
-					}
-				} );
-			}
-			this.renderingContext.setScope( oldScope );
-		}
-		
-		if ( this.iterationCount.getValue() === 0 ) {
-			return undefined;
-		}
-		else {
-			return output.getValue();
-		}
+		this.publishedOutputSinks = new Map<string, Sink<any>>();
 	}
 	
-	protected createScope( blocks: BlockJSON[], parent: BlockScope ): void {
+	protected createScope( blocks: BlockJSON[] = [], parent: BlockScope ): void {
 		this.scope = IteratorBlockScope.fromData( blocks, parent );
+		this.scope.setIterationCount( this.iterationCount );
 	}
-
-	public execute(): void {
-		if( this.leafs ) {
+	
+	protected initialize( blockData: BlockJSON ): void {
+		for( const publishedOutputData of blockData.publishedOutputs ) {
+			const sink = new Sink();
+			this.publishedOutputSinks.set( publishedOutputData.id, sink );
+			this.publishedOutputs.set( publishedOutputData.id, sink.getStream() );
+		}
+		
+		this.scope.iterationCount.observe( iterationCount => {
 			const oldScope = this.renderingContext.getScope();
-			const iterationCount = this.iterationCount.getValue();
-			this.scope.setIterationCount( iterationCount );
+			
 			for( let i = 0; i < iterationCount; i++ ) {
 				this.scope.currentIndex = i;
-				this.renderingContext.setScope( this.scope.getScopeForCurrentIteration() );
-				this.processLeafs();
+				const currentScope = this.scope.getScopeForCurrentIteration();
+				
+				this.renderingContext.setScope( currentScope );
+				
+				for( const publishedOutputData of blockData.publishedOutputs ) {
+					let publishedOutput = this.scope.getPublishedOutput( publishedOutputData.id );
+					
+					if( publishedOutput === undefined ) {
+						publishedOutput = BlockInputFactory.fromData( publishedOutputData, undefined, this.renderingContext );
+						currentScope.setPublishedOutput( publishedOutputData.id, publishedOutput );
+					}
+					
+					if( i === iterationCount - 1 ) {
+						const sink = this.publishedOutputSinks.get( publishedOutputData.id );
+						sink.setSource( publishedOutput );
+					}
+				}
+				
+				for( const leafId of blockData.leafs ) {
+					this.renderingContext.interpretBlockById( leafId );
+				}
 			}
+			
 			this.renderingContext.setScope( oldScope );
-		}
+		} );
 	}
 	
 	public static getDefaultInputValues(): any[] {

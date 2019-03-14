@@ -1,15 +1,16 @@
 import { Block } from "./Block";
 import { Drawable } from "./Drawable";
+import { Stream } from "most";
 
 export class BlockScope {
-	protected blocksData: Map<BlockId, BlockJSON>;
 	protected blocks: Map<BlockId, Block>;
-	public parent: BlockScope;
+	protected publishedOutputs: Map<string, Stream<any>>;
 	
-	constructor( blocksData: Map<BlockId, BlockJSON>, parent: BlockScope ) {
-		this.blocksData = blocksData;
+	constructor(
+			protected blocksData: Map<BlockId, BlockJSON>,
+			public parent: BlockScope ) {
 		this.blocks = new Map<BlockId, Block>();
-		this.parent = parent;
+		this.publishedOutputs = new Map<string, Stream<any>>();
 	}
 	
 	public setBlock( blockId: BlockId, block: Block ): void {
@@ -18,6 +19,14 @@ export class BlockScope {
 	
 	public getBlock( blockId: BlockId ): Block {
 		return this.blocks.get( blockId );
+	}
+	
+	public setPublishedOutput( id: string, output: Stream<any> ): void {
+		this.publishedOutputs.set( id, output );
+	}
+	
+	public getPublishedOutput( id: string ): Stream<any> {
+		return this.publishedOutputs.get( id );
 	}
 
 	public getAllDrawables(): Array< Block & Drawable > {

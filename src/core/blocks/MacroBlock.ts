@@ -1,37 +1,25 @@
-import { Leaf } from "../Leaf";
 import { Block } from "../Block";
 import { PublishableBlock } from "./PublishableBlock";
 import { RenderingContext } from "../RenderingContext";
 import { BlockScope } from "../BlockScope";
+import { BlockInputFactory } from "../BlockInputFactory";
 
-export class MacroBlock extends PublishableBlock implements Leaf {
+export class MacroBlock extends PublishableBlock {
 	protected scope: BlockScope;
-	protected leafs: BlockId[];
 
-	public getPublishedOutputValue( reference: string ): any {
+	protected initialize( blockData: BlockJSON ): void {
 		this.renderingContext.setScope( this.scope );
-		const value = this.publishedOutputs.get( reference ).getValue();
+		
+		for( const blockInput of blockData.publishedOutputs ) {
+			const inputStream = BlockInputFactory.fromData( blockInput, undefined, this.renderingContext );
+			this.publishedOutputs.set( blockInput.id, inputStream );
+		}
+		
+		for( const leafId of blockData.leafs ) {
+			this.renderingContext.interpretBlockById( leafId );
+		}
+		
 		this.renderingContext.setScope( this.scope.parent );
-		return value;
-	}
-	
-	public execute(): void {
-		if( this.leafs ) {
-			this.renderingContext.setScope( this.scope );
-			this.processLeafs();
-			this.renderingContext.setScope( this.scope.parent );
-		}
-	}
-
-	protected processLeafs(): void {
-		for ( const leafId of this.leafs ) {
-			const block = this.renderingContext.interpretBlockById( leafId ) as Block & Leaf;
-			block.execute();
-		}
-	}
-
-	protected setLeafs( leafs: BlockId[] ): void {
-		this.leafs = leafs;
 	}
 
 	protected createScope( blocks: BlockJSON[], parent: BlockScope ): void {
@@ -41,11 +29,9 @@ export class MacroBlock extends PublishableBlock implements Leaf {
 	public static fromData( blockType: any, blockData: BlockJSON, renderingContext: RenderingContext ): MacroBlock {
 		const block = PublishableBlock.fromData( blockType, blockData, renderingContext ) as MacroBlock;
 		
-		block.setRenderingContext( renderingContext );
-		
 		block.createScope( blockData.blocks, renderingContext.getScope() );
 		
-		block.setLeafs( blockData.leafs );
+		block.initialize( blockData );
 		
 		return block;
 	}
