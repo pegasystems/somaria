@@ -64,12 +64,18 @@ async function verifyPublished( value, expectation ) {
 }
 
 async function verifyExternal( value, expectation ) {
+	let externalSignal;
 	const renderingContext = {
-		getExternalInput: jasmine.createSpy( "interpretBlockById" ).and.returnValue( new Signal( value ) )
+		setExternalInput: jasmine.createSpy("setExternalInput").and.callFake( ( id, signal ) => {
+			externalSignal = signal;
+		})
 	};
 	const input = BlockInputFactory.fromData( Mock.External, defaultValue, renderingContext );
-	expect( renderingContext.getExternalInput ).toHaveBeenCalledWith( Mock.External.id );
-	await verifyStream( input.take( 1 ), expectation );
+	expect( renderingContext.setExternalInput ).toHaveBeenCalledWith( Mock.External.id, jasmine.any( Signal ) );
+	externalSignal.set(value);
+	setTimeout( async () => {
+		await verifyStream( input, defaultValue, expectation );
+	}, 0 );
 }
 
 describe( "BlockInputFactory", () => {

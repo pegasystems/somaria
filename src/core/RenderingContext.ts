@@ -21,10 +21,10 @@ export class RenderingContext {
 	protected scope: BlockScope;
 	protected eventsManager: EventsManager;
 
-	constructor( 
+	constructor(
 			private visualization: Visualization,
 			public config: Configuration,
-			protected externalInputs: Map<string, any>,
+			protected externalInputs: Map<string, Signal<any>>,
 			public eventHandler: EventHandler,
 			public animationManager: AnimationManager,
 			public scalingManager: ScalingManager,
@@ -46,10 +46,10 @@ export class RenderingContext {
 		this.frameIndex = this.frameIndex + 1 >>> 0;
 	}
 
-	public getExternalInput( id: string ): Signal<any> {
-		return this.externalInputs.get( id );
+	public setExternalInput( id: string, signal: Signal<any> ): void {
+		this.externalInputs.set( id, signal );
 	}
-
+	
 	public getEventHandler(): EventHandler {
 		return this.eventHandler;
 	}
