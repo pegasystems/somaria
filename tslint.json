@@ -7,7 +7,13 @@
 		"whitespace": [ true, "check-decl", "check-operator", "check-separator", "check-preblock" ],
 		"array-bracket-spacing": [ true, "always" ],
 		"object-curly-spacing": [ true, "always" ],
-		"space-before-function-paren": [ true, "never" ],
+		"space-before-function-paren": [ true, {
+			"asyncArrow": "always",
+			"constructor": "never",
+			"anonymous": "never",
+			"method": "never",
+			"named": "never"
+		} ],
 		"quotemark": [ true, "double" ],
 		"trailing-comma": [ true, { "multiline": "never", "singleline": "never" } ],
 		"triple-equals": true,
@@ -21,6 +27,7 @@
 		"space-within-parens": [ true, 1 ],
 		"no-trailing-whitespace": [ true, "ignore-blank-lines", "ignore-comments" ],
 		"ter-padded-blocks": [ true, "never" ],
+		"array-type": [true, "array"],
 		
 		"max-line-length": [ true, 180 ],
 		"object-literal-sort-keys": false,
@@ -43,7 +50,13 @@
 		"whitespace": [ true, "check-decl", "check-operator", "check-separator", "check-preblock" ],
 		"array-bracket-spacing": [ true, "always" ],
 		"object-curly-spacing": [ true, "always" ],
-		"space-before-function-paren": [ true, "never" ],
+		"space-before-function-paren": [ true, {
+			"asyncArrow": "always",
+			"constructor": "never",
+			"anonymous": "never",
+			"method": "never",
+			"named": "never"
+		} ],
 		"quotemark": [ true, "double" ],
 		"trailing-comma": [ true, { "multiline": "never", "singleline": "never" } ],
 		"triple-equals": true,

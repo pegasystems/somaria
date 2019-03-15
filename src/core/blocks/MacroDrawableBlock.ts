@@ -5,14 +5,14 @@ import { Drawable } from "../Drawable";
 import { RenderingContext } from "../RenderingContext";
 import { BlockScope } from "../BlockScope";
 import * as THREE from "three";
-import * as most from "most";
+import { Stream } from "most";
 
 export class MacroDrawableBlock extends AbstractDrawableBlock {
 	protected scope: BlockScope;
 	protected drawables: BlockId[];
 	protected leafs: BlockId[];
 	
-	constructor( isEnabled: most.Stream<number> ) {
+	constructor( isEnabled: Stream<number> ) {
 		super( isEnabled );
 	}
 	

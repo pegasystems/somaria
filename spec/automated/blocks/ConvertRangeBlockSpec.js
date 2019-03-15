@@ -7,7 +7,7 @@ async function verify( valueToScale, sourceStart, sourceEnd, targetStart, target
 	await verifyStream( block.getOutputStream( 0 ), expectedResult );
 }
 
-describe( "ConvertRangeBlock", () => { 
+describe( "ConvertRangeBlock", () => {
 	it( "is defined as a block type", () => {
 		expect( ConvertRangeBlock ).toBeDefined();
 	} );

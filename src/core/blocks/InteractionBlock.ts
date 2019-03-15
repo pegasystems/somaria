@@ -3,7 +3,7 @@ import { ConsumableBlock } from "./ConsumableBlock";
 import { RenderingContext } from "../RenderingContext";
 import { Signal } from "../Signal";
 import * as THREE from "three";
-import * as most from "most";
+import { Stream } from "most";
 
 export class InteractionBlock extends ConsumableBlock {
 	private static MOUSE_DOWN: number = 0;
@@ -37,7 +37,7 @@ export class InteractionBlock extends ConsumableBlock {
 		return needsRender;
 	}
 
-	public getOutputStream( index: number ): most.Stream<any> {
+	public getOutputStream( index: number ): Stream<any> {
 		return this.outputSignals[ index ].getStream();
 	}
 

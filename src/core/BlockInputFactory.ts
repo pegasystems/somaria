@@ -1,7 +1,7 @@
 import { RenderingContext } from "./RenderingContext";
 import { PublishableBlock } from "./blocks/PublishableBlock";
 import { ConsumableBlock } from "./blocks/ConsumableBlock";
-import * as most from "most";
+import { Stream, of as streamOf } from "most";
 import { Signal } from "./Signal";
 
 function sanitize( value: any, defaultValue: any ): any {
@@ -19,7 +19,7 @@ export class BlockInputFactory {
 	protected static Published: string = "Published";
 	protected static External: string = "External";
 	
-	public static fromData( input: BlockInputJSON, defaultValue: any, renderingContext: RenderingContext ): most.Stream<any> {
+	public static fromData( input: BlockInputJSON, defaultValue: any, renderingContext: RenderingContext ): Stream<any> {
 		if( input === undefined ) {
 			input = {
 				accessType: BlockInputFactory.Value,
@@ -28,7 +28,7 @@ export class BlockInputFactory {
 		}
 		
 		if( input.accessType === BlockInputFactory.Value ) {
-			return most.of( sanitize( input.value, defaultValue ) );
+			return streamOf( sanitize( input.value, defaultValue ) );
 		}
 		
 		let stream;
@@ -49,7 +49,7 @@ export class BlockInputFactory {
 				return stream;
 				break;
 			default:
-				stream = most.of( defaultValue );
+				stream = streamOf( defaultValue );
 		}
 		
 		return stream.map( ( value: any ) => sanitize( value, defaultValue ) );

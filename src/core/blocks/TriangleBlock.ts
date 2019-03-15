@@ -60,7 +60,7 @@ export class TriangleBlock extends AbstractDrawableBlock {
 
 	public getObjects(): THREE.Object3D[] {
 		return [ this.mesh ];
-	}	
+	}
 
 	public static getDefaultInputValues( config: Configuration ): any[] {
 		const color = Color.fromHex( config.meshColor, 1 );

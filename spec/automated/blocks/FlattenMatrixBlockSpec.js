@@ -33,7 +33,7 @@ describe( "FlattenMatrixBlock", () => {
 	} );
 
 	it( "returns flatten list when given mixed array", () => {
-		verify( [ [ 3, [ 1, "flatten", [ 2, "matrix", [ 2, 5 ] ] ], 1, [ 9, [ {}, [ 2, true ] ] ] ] ] , 
+		verify( [ [ 3, [ 1, "flatten", [ 2, "matrix", [ 2, 5 ] ] ], 1, [ 9, [ {}, [ 2, true ] ] ] ] ] ,
 			[ 3, 1, "flatten", 2, "matrix", 2, 5, 1, 9, {}, 2, true ] );
 	} );
 } );

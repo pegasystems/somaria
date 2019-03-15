@@ -1,6 +1,6 @@
 import { Block } from "../Block";
-import * as most from "most";
+import { Stream } from "most";
 
 export abstract class ConsumableBlock extends Block {
-	public abstract getOutputStream( index: number ): most.Stream<any>;
+	public abstract getOutputStream( index: number ): Stream<any>;
 }

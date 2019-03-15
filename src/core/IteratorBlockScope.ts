@@ -1,9 +1,9 @@
 import { BlockScope } from "./BlockScope";
 import * as DrawableUtils from "./utils/DrawableUtils";
-import * as most from "most";
+import { Stream } from "most";
 
 export class IteratorBlockScope extends BlockScope {
-	public iterationCount: most.Stream<number>;
+	public iterationCount: Stream<number>;
 	public currentIndex: number;
 	protected variables: Map<string, any>;
 	protected iterationScopes: BlockScope[];
@@ -15,8 +15,8 @@ export class IteratorBlockScope extends BlockScope {
 		this.currentIndex = 0;
 	}
 	
-	public setIterationCount( iterationCount: most.Stream<number> ) {
-		this.iterationCount = iterationCount.tap( count => this.setBlockScopeCount( count ) );
+	public setIterationCount( iterationCount: Stream<number> ): void {
+		this.iterationCount = iterationCount.tap( ( count: number ) => this.setBlockScopeCount( count ) );
 	}
 
 	protected setBlockScopeCount( count: number ): void {

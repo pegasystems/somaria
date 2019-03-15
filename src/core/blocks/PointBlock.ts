@@ -1,22 +1,24 @@
 import { ConsumableBlock } from "./ConsumableBlock";
 import * as THREE from "three";
-import * as most from "most";
+import { Stream, combine } from "most";
 
 export class PointBlock extends ConsumableBlock {
-	protected pointStream: most.Stream<Cartesian>;
+	protected pointStream: Stream<Cartesian>;
 	
 	constructor(
-			x: most.Stream<number>,
-			y: most.Stream<number>,
-			z: most.Stream<number> ) {
+			x: Stream<number>,
+			y: Stream<number>,
+			z: Stream<number> ) {
 		super();
 		
 		const point = new THREE.Vector3();
 		
-		this.pointStream = most.combine<number,number,number,Cartesian>( ( x, y, z ) => point.set( x, y, z ), x, y, z );
+		this.pointStream = combine<number, number, number, Cartesian>( ( x: number, y: number, z: number ) =>
+			point.set( x, y, z ),
+			x, y, z );
 	}
 	
-	public getOutputStream( index: number ): most.Stream<Cartesian> {
+	public getOutputStream( index: number ): Stream<Cartesian> {
 		return this.pointStream;
 	}
 

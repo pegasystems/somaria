@@ -24,7 +24,7 @@ export class ImageBlock extends ConsumableBlock {
 			}
 			const loader = new THREE.TextureLoader( this.loadManager );
 			loader.crossOrigin = "anonymous";
-			this.texture = loader.load( this.url.getValue() );	
+			this.texture = loader.load( this.url.getValue() );
 		}
 		
 		if( index === ImageBlock.TEXTURE_INDEX ) {

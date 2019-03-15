@@ -9,7 +9,7 @@ export class EventReceiveBlock extends ConsumableBlock {
 	protected eventsManager: EventsManager;
 	protected renderingContext: RenderingContext;
 
-	constructor( 
+	constructor(
 		protected readonly name: Input<string>,
 		protected readonly initialValue: Input<any> ) {
 		super();

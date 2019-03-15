@@ -4,18 +4,18 @@ import { IteratorBlockScope } from "../IteratorBlockScope";
 import { BlockScope } from "../BlockScope";
 import { Drawable } from "../Drawable";
 import * as THREE from "three";
-import * as most from "most";
+import { Stream } from "most";
 
 export class IteratorDrawableBlock extends MacroDrawableBlock {
 	protected scope: IteratorBlockScope;
-	protected iterationCountStream: most.Stream<number>;
+	protected iterationCountStream: Stream<number>;
 	protected iterationCount: number;
 
 	constructor(
-			isEnabled: most.Stream<number>,
-			iterationCount: most.Stream<number> ) {
+			isEnabled: Stream<number>,
+			iterationCount: Stream<number> ) {
 		super( isEnabled );
-		this.iterationCountStream = iterationCount.map( count => this.iterationCount = Math.max( 0, count ) );
+		this.iterationCountStream = iterationCount.map( ( count: number ) => this.iterationCount = Math.max( 0, count ) );
 	}
 
 	protected createScope( blocks: BlockJSON[] = [], parent: BlockScope ): void {

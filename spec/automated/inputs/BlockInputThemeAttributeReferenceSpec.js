@@ -33,7 +33,7 @@ function registerTestThemes( themeReference ) {
 	MockRenderingContext = new RenderingContext( {}, { theme: themeReference }, {}, {}, {}, {}, {} );
 }
 
-describe( "BlockInputThemeAttributeReference", () => {	
+describe( "BlockInputThemeAttributeReference", () => {
 	afterEach( () => {
 		Theme.registeredThemes.delete( testThemeReference );
 	} );

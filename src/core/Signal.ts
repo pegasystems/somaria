@@ -1,43 +1,31 @@
-import * as most from "most";
+import { Subscriber, Observable, Stream, from as streamFrom } from "most";
+import { SignalSubscription } from "./SignalSubscription";
 
-export class SignalSubscription<T> implements most.Subscription<T> {
-	public closed: boolean;
-	
-	constructor( protected readonly subscribers: Set<most.Subscriber<T>>, protected readonly subscriber: most.Subscriber<T> ) {
-		this.closed = false;
-	}
-	
-	unsubscribe(): void {
-		this.subscribers.delete( this.subscriber );
-		this.closed = true;
-	}
-}
-
-export class Signal<T> implements most.Observable<T> {
-	protected subscribers: Set<most.Subscriber<T>>;
-	protected stream: most.Stream<T>;
+export class Signal<T> implements Observable<T> {
+	protected subscribers: Set<Subscriber<T>>;
+	protected stream: Stream<T>;
 	
 	constructor( initialValue: T ) {
 		this.subscribers = new Set();
-		this.stream = most.from( this ).skipRepeats().startWith( initialValue );
+		this.stream = streamFrom( this ).skipRepeats().startWith( initialValue );
 	}
 	
-	[Symbol.observable]() {
+	public [Symbol.observable](): Observable<T> {
 		return this;
 	}
 	
-	subscribe( subscriber: most.Subscriber<T> ): SignalSubscription<T> {
+	public subscribe( subscriber: Subscriber<T> ): SignalSubscription<T> {
 		this.subscribers.add( subscriber );
 		return new SignalSubscription( this.subscribers, subscriber );
 	}
 	
-	set( value: T ): void {
-		this.subscribers.forEach( subscriber => {
+	public set( value: T ): void {
+		this.subscribers.forEach( ( subscriber: Subscriber<T> ) => {
 			subscriber.next( value );
 		} );
 	}
 	
-	getStream(): most.Stream<T> {
+	public getStream(): Stream<T> {
 		return this.stream;
 	}
 }

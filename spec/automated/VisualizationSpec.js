@@ -231,7 +231,7 @@ describe( "Visualization", () => {
 		expect( Theme.registeredThemes.size ).toBe( 2 );
 	} );
 
-	it( "registers more than one theme", () => {		
+	it( "registers more than one theme", () => {
 		Visualization.registerTheme( "TestTheme1", customTheme1 );
 		Visualization.registerTheme( "TestTheme2", customTheme2 );
 		expect( Theme.registeredThemes.size ).toBe( 3 );

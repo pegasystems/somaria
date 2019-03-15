@@ -7,7 +7,7 @@ export class FlattenMatrixBlock extends ConsumableBlock {
 		super();
 	}
 
-	public getOutputValue( index: number ): any[] {		
+	public getOutputValue( index: number ): any[] {
 		if( this.matrix.hasChanged() ) {
 			const list = this.matrix.getValue();
 			this.merged = this.flatten( list );

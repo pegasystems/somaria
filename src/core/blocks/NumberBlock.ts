@@ -1,12 +1,12 @@
 import { ConsumableBlock } from "./ConsumableBlock";
-import * as most from "most";
+import { Stream } from "most";
 
 export class NumberBlock extends ConsumableBlock {
-	constructor( protected readonly value: most.Stream<number> ) {
+	constructor( protected readonly value: Stream<number> ) {
 		super();
 	}
 	
-	public getOutputStream( index: number ): most.Stream<number> {
+	public getOutputStream( index: number ): Stream<number> {
 		return this.value;
 	}
 	

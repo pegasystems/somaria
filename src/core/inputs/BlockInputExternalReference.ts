@@ -31,7 +31,7 @@ export class BlockInputExternalReference<T> extends BlockInput<T> {
 				value = this.renderingContext.getThemeAttributeValue( this.themeAttributeType );
 			}
 			else if( this.fallbackAccessType === "Value" ) {
-				value = this.fallbackValue;	
+				value = this.fallbackValue;
 			}
 		}
 		return this.sanitize( value );

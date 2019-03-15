@@ -3,7 +3,7 @@ import { Drawable } from "../Drawable";
 import { RenderingContext } from "../RenderingContext";
 import { InteractionBlock } from "./InteractionBlock";
 import * as THREE from "three";
-import * as most from "most";
+import { Stream } from "most";
 
 export abstract class AbstractDrawableBlock extends Block implements Drawable {
 	private interactionBlock: InteractionBlock;
@@ -11,11 +11,11 @@ export abstract class AbstractDrawableBlock extends Block implements Drawable {
 	protected isEnabled: boolean;
 	protected objects: THREE.Object3D[];
 
-	constructor( isEnabled: most.Stream<number> ) {
+	constructor( isEnabled: Stream<number> ) {
 		super();
 		this.isDrawable = true;
 		this.isEnabled = false;
-		this.observe( isEnabled.map( isEnabled => this.isEnabled = ( isEnabled !== 0 ) ) );
+		this.observe( isEnabled.map( ( isEnabled: number ) => this.isEnabled = ( isEnabled !== 0 ) ) );
 		this.objects = [];
 	}
 
@@ -34,8 +34,8 @@ export abstract class AbstractDrawableBlock extends Block implements Drawable {
 		}
 	}
 	
-	protected observe( stream: most.Stream<any> ) {
-		stream.observe( value => this.renderingContext.animationManager.requestFrame() );
+	protected observe( stream: Stream<any> ): void {
+		stream.observe( ( value: any ) => this.renderingContext.animationManager.requestFrame() );
 	}
 	
 	protected setRenderingContext( renderingContext: RenderingContext ): void {

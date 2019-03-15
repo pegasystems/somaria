@@ -28,27 +28,27 @@ describe( "LogicalOperatorBlock", () => {
 		expect( LogicalOperatorBlock.getDefaultInputValues( {} ) ).toEqual( [ 0, 0, "AND" ] );
 	} );
 	
-	it( "should return correct values for AND", () => { 
+	it( "should return correct values for AND", () => {
 		verify( "AND", [ 0, 0, 0, 1 ] );
 	} );
 	
-	it( "should return correct values for NAND", () => { 
+	it( "should return correct values for NAND", () => {
 		verify( "NAND", [ 1, 1, 1, 0 ] );
 	} );
 		
-	it( "should return correct values for OR ", () => { 
+	it( "should return correct values for OR ", () => {
 		verify( "OR", [ 0, 1, 1, 1 ] );
 	} );
 	
-	it( "should return correct values for NOR", () => { 
+	it( "should return correct values for NOR", () => {
 		verify( "NOR", [ 1, 0, 0, 0 ] );
 	} );
 	
-	it( "should return correct values for XOR", () => { 
+	it( "should return correct values for XOR", () => {
 		verify( "XOR", [ 0, 1, 1, 0 ] );
 	} );
 		
-	it( "should return correct values for NXOR", () => { 
+	it( "should return correct values for NXOR", () => {
 		verify( "NXOR", [ 1, 0, 0, 1 ] );
 	} );
-} ); 
+} );

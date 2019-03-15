@@ -62,14 +62,14 @@ export class TextBlock extends ConsumableBlock {
 								if( lineWidth <= maxWidth ) {
 									multiline.push( line );
 									line = words[ i ];
-								} 
+								}
 								else {
 									const partialtext = TextBlock.truncateText( line, maxWidth, context, true );
 									multiline.push( partialtext );
 									line = line.substring( partialtext.length - 1 );
 									i--;
 								}
-							} 
+							}
 							else {
 								line = currentLine;
 							}
@@ -77,15 +77,15 @@ export class TextBlock extends ConsumableBlock {
 								TextBlock.splitTextMultiline( multiline, line, maxWidth, context );
 							}
 						}
-					} 
+					}
 					else {
 						TextBlock.splitTextMultiline( multiline, text, maxWidth, context );
 					}
-				} 
+				}
 				else {
 					text = TextBlock.truncateText( text, maxWidth, context );
 				}
-			} 
+			}
 			this.canvas.width = this.textWidth;
 			if( multiline ) {
 				this.canvas.height = multiline.length * this.textHeight;
@@ -103,7 +103,7 @@ export class TextBlock extends ConsumableBlock {
 					context.fillText( multiline[ i ], 0, lineHeight );
 				}
 				this.textHeight = this.canvas.height;
-			} 
+			}
 			else {
 				context.fillText( text, 0, this.textHeight / 2 );
 			}

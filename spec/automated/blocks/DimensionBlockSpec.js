@@ -6,8 +6,8 @@ const testDimension = {
 	title: "Count",
 	labels: [ "0", "5", "10", "15", "20" ],
 	bounds: [
-		{ min: 0, max: 2 },	
-		{ min: 0, max: 20 }	
+		{ min: 0, max: 2 },
+		{ min: 0, max: 20 }
 	],
 	series: [
 		{

@@ -19,13 +19,13 @@ export class Sink<T> extends Signal<T> {
 		}
 	}
 	
-	public next( value ) {
+	public next( value: T ): void {
 		this.set( value );
 	}
 	
-	public error( value ) {}
+	public error( value: any ): void {}
 	
-	public complete( value ) {
+	public complete( value: T ): void {
 		this.set( value );
 	}
 }

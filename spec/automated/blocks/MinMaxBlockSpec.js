@@ -8,7 +8,7 @@ function verify( values, min, max ) {
 	expect( block.getOutputValue( 1 ) ).toBe( max );
 }
 
-describe( "MinMaxBlock", () => { 
+describe( "MinMaxBlock", () => {
 	it( "is defined as a block type", () => {
 		expect( MinMaxBlock ).toBeDefined();
 	} );

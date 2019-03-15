@@ -6,7 +6,7 @@ const { defaultThemeJSON } = require( "../build/core/themes/somaria-default-them
 describe( "Theme", () => {
 	it( "can create a theme from generated json", () => {
 		const themeJSON = {
-			ColorPalette: [ 
+			ColorPalette: [
 				0x179595,
 				0xE10B81,
 				0x2B38A1

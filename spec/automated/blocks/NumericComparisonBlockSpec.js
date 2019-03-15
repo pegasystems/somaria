@@ -36,7 +36,7 @@ describe( "NumericComparisonBlock", () => {
 		expect( block.getOutputValue( 0 ) ).toBe( 1 );
 	} );
 	
-	it( "should compare two values for greater than and return false", () => { 
+	it( "should compare two values for greater than and return false", () => {
 		let block = makeBlock( NumericComparisonBlock, [ 2, 4, ">" ] );
 		expect( block.getOutputValue( 0 ) ).toBe( 0 );
 	} );
@@ -46,7 +46,7 @@ describe( "NumericComparisonBlock", () => {
 		expect( block.getOutputValue( 0 ) ).toBe( 1 );
 	} );
 	
-	it( "should compare two values for less than and return false", () => { 
+	it( "should compare two values for less than and return false", () => {
 		let block = makeBlock( NumericComparisonBlock, [ 4, 2, "<" ] );
 		expect( block.getOutputValue( 0 ) ).toBe( 0 );
 	} );
@@ -56,7 +56,7 @@ describe( "NumericComparisonBlock", () => {
 		expect( block.getOutputValue( 0 ) ).toBe( 1 );
 	} );
 	
-	it( "should compare two values for greater than equals and return false", () => { 
+	it( "should compare two values for greater than equals and return false", () => {
 		let block = makeBlock( NumericComparisonBlock, [ 2, 4, ">=" ] );
 		expect( block.getOutputValue( 0 ) ).toBe( 0 );
 	} );
@@ -66,7 +66,7 @@ describe( "NumericComparisonBlock", () => {
 		expect( block.getOutputValue( 0 ) ).toBe( 1 );
 	} );
 	
-	it( "should compare two values for less than equals and return false", () => { 
+	it( "should compare two values for less than equals and return false", () => {
 		let block = makeBlock( NumericComparisonBlock, [ 4, 2, "<=" ] );
 		expect( block.getOutputValue( 0 ) ).toBe( 0 );
 	} );

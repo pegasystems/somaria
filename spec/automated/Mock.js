@@ -63,8 +63,8 @@ exports.EventBroadcast1 = {
 exports.Macro1 = {
 	id: "Macro1",
 	type: "Macro",
-	leafs: [ 
-		exports.EventBroadcast1.id 
+	leafs: [
+		exports.EventBroadcast1.id
 	],
 	blocks: [
 		exports.EventBroadcast1
@@ -285,7 +285,7 @@ exports.IteratorDrawable = {
 			],
 			drawables: [
 				"Rect1"
-			]			
+			]
 		} ,
 		{
 			id: "Arithmetic1",

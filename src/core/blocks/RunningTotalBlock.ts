@@ -3,7 +3,7 @@ import { BlockInput as Input } from "../BlockInput";
 import { IteratorBlockScope } from "../IteratorBlockScope";
 
 export class RunningTotalBlock extends IteratorScopedBlock {
-	constructor( 
+	constructor(
 			blockId: string,
 			iteratorScope: IteratorBlockScope,
 			protected readonly value: Input<number> ) {

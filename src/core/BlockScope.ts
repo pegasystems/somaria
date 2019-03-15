@@ -29,7 +29,7 @@ export class BlockScope {
 		return this.publishedOutputs.get( id );
 	}
 
-	public getAllDrawables(): Array< Block & Drawable > {
+	public getAllDrawables(): ( Block & Drawable )[] {
 		const drawables = [];
 		this.blocks.forEach( ( block: Block, blockId: BlockId ) => {
 			if( block.isDrawable ) {

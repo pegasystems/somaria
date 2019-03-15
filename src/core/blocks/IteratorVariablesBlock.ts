@@ -1,11 +1,11 @@
 import { IteratorScopedBlock } from "./IteratorScopedBlock";
 import { RenderingContext } from "../RenderingContext";
-import * as most from "most";
+import { Stream, of as streamOf } from "most";
 
 export class IteratorVariablesBlock extends IteratorScopedBlock {
-	protected outputStreams: most.Stream<number>[];
+	protected outputStreams: Stream<number>[];
 
-	public getOutputStream( index: number ): most.Stream<number> {
+	public getOutputStream( index: number ): Stream<number> {
 		return this.outputStreams[ index ];
 	}
 	
@@ -13,7 +13,7 @@ export class IteratorVariablesBlock extends IteratorScopedBlock {
 		const block = IteratorScopedBlock.fromData( blockType, blockData, renderingContext ) as IteratorVariablesBlock;
 		block.outputStreams = [
 			block.iteratorScope.iterationCount,
-			most.of( block.iteratorScope.currentIndex )
+			streamOf( block.iteratorScope.currentIndex )
 		];
 		return block;
 	}

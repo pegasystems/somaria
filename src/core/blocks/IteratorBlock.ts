@@ -26,7 +26,7 @@ export class IteratorBlock extends MacroBlock {
 			this.publishedOutputs.set( publishedOutputData.id, sink.getStream() );
 		}
 		
-		this.scope.iterationCount.observe( iterationCount => {
+		this.scope.iterationCount.observe( ( iterationCount: number ) => {
 			const oldScope = this.renderingContext.getScope();
 			
 			for( let i = 0; i < iterationCount; i++ ) {

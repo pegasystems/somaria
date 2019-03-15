@@ -98,7 +98,7 @@ describe( "TextBlock", () => {
 	} );
 
 	it( "defines default input values", () => {
-		expect( TextBlock.getDefaultInputValues( config, renderingContext ) ).toEqual( [ 
+		expect( TextBlock.getDefaultInputValues( config, renderingContext ) ).toEqual( [
 			"",
 			"Helvetica",
 			config.fontSize,

@@ -1,15 +1,15 @@
 import { ConsumableBlock } from "./ConsumableBlock";
-import * as most from "most";
+import { Stream, combine } from "most";
 
 export class SampleBlock extends ConsumableBlock {
-	protected sampleStream: most.Stream<number[]>;
+	protected sampleStream: Stream<number[]>;
 	
 	constructor(
-			startValue: most.Stream<number>,
-			endValue: most.Stream<number>,
-			numSamples: most.Stream<number> ) {
+			startValue: Stream<number>,
+			endValue: Stream<number>,
+			numSamples: Stream<number> ) {
 		super();
-		this.sampleStream = most.combine<number, number, number, number[]>( ( startValue, endValue, numSamples ) => {
+		this.sampleStream = combine<number, number, number, number[]>( ( startValue: number, endValue: number, numSamples: number ) => {
 			if( numSamples === 0 ) {
 				return [];
 			}
@@ -23,7 +23,7 @@ export class SampleBlock extends ConsumableBlock {
 		}, startValue, endValue, numSamples );
 	}
 	
-	public getOutputStream( index: number ): most.Stream<number[]> {
+	public getOutputStream( index: number ): Stream<number[]> {
 		return this.sampleStream;
 	}
 	

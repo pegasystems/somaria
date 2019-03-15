@@ -1,25 +1,25 @@
 import { Configuration } from "../Configuration";
 import { ConsumableBlock } from "./ConsumableBlock";
 import { Color } from "../structs/Color";
-import * as most from "most";
+import { Stream, merge } from "most";
 
 export class ColorHexBlock extends ConsumableBlock {
 	protected color: Color;
-	protected colorStream: most.Stream<Color>;
+	protected colorStream: Stream<Color>;
 	
 	constructor(
-			hex: most.Stream<number>,
-			alpha: most.Stream<number> ) {
+			hex: Stream<number>,
+			alpha: Stream<number> ) {
 		super();
 		this.color = Color.fromRGB( 0, 0, 0, 0 );
 		
-		this.colorStream = most.merge<Color>(
-			hex.map( hex => this.color.setHex( hex ) as Color ),
-			alpha.map( alpha => this.color.setAlpha( alpha ) )
+		this.colorStream = merge<Color>(
+			hex.map( ( hex: number ) => this.color.setHex( hex ) as Color ),
+			alpha.map( ( alpha: number ) => this.color.setAlpha( alpha ) )
 		);
 	}
 	
-	public getOutputStream( index: number ): most.Stream<Color> {
+	public getOutputStream( index: number ): Stream<Color> {
 		return this.colorStream;
 	}
 
