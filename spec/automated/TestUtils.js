@@ -1,5 +1,4 @@
 const THREE = require( "three" );
-const most = require( "most" );
 const { Color } = require( "../build/core/structs/Color" );
 const { BlockInputFactory } = require( "../build/core/BlockInputFactory" );
 
@@ -43,7 +42,23 @@ const defaultConfig = {
 	origin: module.exports.Point( 0, 0, 0 )
 };
 
-module.exports.makeBlock = ( blockType, inputValues, inputs = [], renderingContext ) => {
+let pendingPromises = [];
+module.exports.pendingPromises = pendingPromises;
+
+const { AbstractDrawableBlock } = require( "../build/core/blocks/AbstractDrawableBlock.js" );
+AbstractDrawableBlock.prototype.observe = function( stream ) {
+	pendingPromises.push( stream );
+};
+
+const { SignalSubscription } = require( "../build/core/SignalSubscription.js" );
+SignalSubscription.prototype.unsubscribe = function() {};
+
+module.exports.drainStreams = async function() {
+	await Promise.all( pendingPromises.map( stream => stream.take( 1 ).drain() ) );
+	pendingPromises.length = 0;
+}
+
+module.exports.makeBlock = ( blockType, inputValues, inputs = [], renderingContext )  => {
 	const defaultInputValues = blockType.getDefaultInputValues( defaultConfig, renderingContext );
 	for( let i = 0; i < defaultInputValues.length; i++ ) {
 		const inputData = {

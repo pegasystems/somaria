@@ -18,7 +18,8 @@
 		"automated/blocks/ConvertRangeBlockSpec.js",
 		"automated/blocks/NumberBlockSpec.js",
 		"automated/blocks/PointBlockSpec.js",
-		"automated/blocks/SampleBlockSpec.js"
+		"automated/blocks/SampleBlockSpec.js",
+		"automated/blocks/RectangleBlockSpec.js"
 	],
 	"stopSpecOnExpectationFailure": false,
 	"random": false

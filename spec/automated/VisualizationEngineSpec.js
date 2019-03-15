@@ -1,27 +1,12 @@
-const { itAsync, customMatchers } = require( "./TestUtils" );
+const { itAsync, customMatchers, pendingPromises, drainStreams } = require( "./TestUtils" );
 const THREE = require( "three" );
 const Visualization = require( "../build/Visualization.js" ).default;
 const Mock = require( "./Mock.js" );
 
-let pendingPromises = [];
-
-const { AbstractDrawableBlock } = require( "../build/core/blocks/AbstractDrawableBlock.js" );
-AbstractDrawableBlock.prototype.observe = function( stream ) {
-	pendingPromises.push( stream );
-};
-
-const { SignalSubscription } = require( "../build/core/Signal.js" );
-SignalSubscription.prototype.unsubscribe = function() {};
-
-async function drainStreams( visualization ) {
-	await Promise.all( pendingPromises.map( stream => stream.take( 1 ).drain() ) );
-	pendingPromises = [];
-}
-
 async function renderVisualization( visualizationJSON ) {
 	const visualization = new Visualization( null, visualizationJSON );
 	while( pendingPromises.length > 0 ) {
-		await drainStreams( visualization );
+		await drainStreams();
 		visualization.render();
 	}
 	return visualization;
@@ -188,6 +173,7 @@ describe( "Visualization Integration Test", () => {
 				Mock.Rect1.id
 			]
 		}, element );
+		debugger;
 		expect( visualization.scene.children.length ).toBe( 4 );
 		assertRectangleSize( visualization.scene.children[ 0 ], 30, 40 );
 		assertRectangleSize( visualization.scene.children[ 1 ], 30, 50 );
@@ -252,6 +238,7 @@ describe( "Visualization Integration Test", () => {
 			drawables: [ Mock.Rect12.id ]
 		}, element );
 		let loadHandler;
+		debugger;
 		let imageSpy = {
 			addEventListener: jasmine.createSpy( "addEventListener" ).and.callFake( ( type, handler ) => {
 				if( type === "load" ) {
@@ -370,12 +357,12 @@ describe( "Visualization Integration Test", () => {
 			blocks: [ Mock.Image1, Mock.Rect12, Mock.IteratorDrawable1 ],
 			drawables: [ Mock.IteratorDrawable1.id, Mock.Rect12.id ]
 		}, element );
-		
+
 		expect( renderMethod.calls.count() ).toBe( renderCount + 1 );
 		expect( visualization.scene.children.length ).toBe( 11 );
 		for( let i = 0; i < 10; i++ ) {
 			const arithmetic = i * 25;
-			assertRectangleSize( visualization.scene.children[ i ], i * 25, 60 );
+			assertRectangleSize( visualization.scene.children[ i ], arithmetic, 60 );
 		}
 		const eventHandler = visualization.eventHandler;
 		expect( eventHandler ).toBeDefined();
@@ -412,7 +399,7 @@ describe( "Visualization Integration Test", () => {
 			drawables: [ Mock.Rect10.id, Mock.IteratorDrawable2.id ]
 		}, element );
 		
-		expect( renderMethod.calls.count() ).toBe( renderCount + 1 );
+		expect( renderMethod.calls.count() ).toBe( renderCount + 2 );
 		expect( visualization.scene.children.length ).toBe( 21 );
 		assertRectangleSize( visualization.scene.children[ 0 ], 100, 100 );
 		for( let i = 1; i < 21; i += 2 ) {
@@ -426,7 +413,7 @@ describe( "Visualization Integration Test", () => {
 		mouseEvent.type = "mousedown";
 		objects.push( { object: visualization.scene.children[ 0 ] } );
 		eventHandler.handleEvent( mouseEvent );
-		expect( renderMethod.calls.count() ).toBe( renderCount + 2 );
+		expect( renderMethod.calls.count() ).toBe( renderCount + 3 );
 		expect( visualization.scene.children.length ).toBe( 11 );
 		assertRectangleSize( visualization.scene.children[ 0 ], 100, 100 );
 		for( let i = 1; i < 11; i += 2 ) {
@@ -434,10 +421,10 @@ describe( "Visualization Integration Test", () => {
 		}
 		mouseEvent.type = "mouseup";
 		eventHandler.handleEvent( mouseEvent );
-		expect( renderMethod.calls.count() ).toBe( renderCount + 3 );
-		expect( visualization.scene.children.length ).toBe( 21 );
+		expect( renderMethod.calls.count() ).toBe( renderCount + 4 );
+		expect( visualization.scene.children.length ).toBe( 11 );
 		assertRectangleSize( visualization.scene.children[ 0 ], 100, 100 );
-		for( let i = 1; i < 21; i += 2 ) {
+		for( let i = 1; i < 11; i += 2 ) {
 			assertRectangleSize( visualization.scene.children[ i ], 70, 60 );
 		}
 	} );

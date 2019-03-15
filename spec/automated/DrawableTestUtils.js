@@ -1,5 +1,7 @@
+const THREE = require('three');
+
 module.exports.verifyObjects = ( drawable, expectedObjectCount ) => {
-	let objects = drawable.create3dObjects();
+	let objects = drawable.getObjects();
 	expect( objects.length ).toBe( expectedObjectCount );
 	expect( drawable.getObjects() ).toEqual( objects );
 	return objects;

@@ -46,7 +46,6 @@ export class BlockInputFactory {
 				const signal = new Signal( defaultValue );
 				renderingContext.setExternalInput( input.id, signal );
 				stream = signal.getStream();
-				return stream;
 				break;
 			default:
 				stream = streamOf( defaultValue );

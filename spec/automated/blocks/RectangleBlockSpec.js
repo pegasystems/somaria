@@ -1,11 +1,13 @@
-const { makeBlock, customMatchers, Point, Angle, Color } = require( "../TestUtils" );
+const { makeBlock, customMatchers, Point, Angle, Color, itAsync, drainStreams } = require( "../TestUtils" );
 const { verifyObjects, getTranslatedMatrix } = require( "../DrawableTestUtils" );
 const { BlockTypes } = require( "../../build/core/BlockTypes" );
 const { TexturedMaterial } = require( "../../build/core/materials/TexturedMaterial" );
 const RectangleBlock = BlockTypes.get( "Rectangle" );
+const THREE = require('three');
 
-function verify( position, width, height, color, angle, verticalAnchor, horizontalAnchor, anchorX, anchorY, texture ) {
-	let block = makeBlock( RectangleBlock, [ true, position, width, height, color, angle, verticalAnchor, horizontalAnchor, texture ] );
+async function verify( position, width, height, color, angle, verticalAnchor, horizontalAnchor, anchorX, anchorY, texture ) {
+	let block = makeBlock( RectangleBlock, [ 1, position, width, height, color, angle, verticalAnchor, horizontalAnchor, texture ] );
+	await drainStreams();
 	let object = verifyObjects( block, 1 )[ 0 ];
 	let scale = Point( width, height, 1 );
 	expect( object.matrix ).toEqualStruct( getTranslatedMatrix( position, scale, angle, anchorX, anchorY, 0 ) );
@@ -38,7 +40,7 @@ describe( "RectangleBlock", () => {
 	it( "defines default input values", () => {
 		const config = { meshColor: 0xaabbcc };
 		expect( RectangleBlock.getDefaultInputValues( config ) ).toEqual( [
-			true,
+			1,
 			Point( 0, 0, 0 ),
 			100,
 			100,
@@ -50,26 +52,28 @@ describe( "RectangleBlock", () => {
 		] );
 	} );
 	
-	it( "enables", () => {
-		let block = makeBlock( RectangleBlock, [ true, Point( 1, 2, 3 ), 10, 20, Color( 0x000000, 1 ), Angle( 4, 5, 6 ) ] );
-		expect( block.isEnabled.getValue() ).toBe( true );
+	itAsync( "enables", async () => {
+		let block =  makeBlock( RectangleBlock, [ 1, Point( 1, 2, 3 ), 10, 20, Color( 0x000000, 1 ), Angle( 4, 5, 6 ) ] );
+		await drainStreams();
+		expect( block.isEnabled ).toBe( 1 );
 	} );
 	
-	it( "disables", () => {
-		let block = makeBlock( RectangleBlock, [ false, Point( 1, 2, 3 ), 10, 20, Color( 0x000000, 1 ), Angle( 4, 5, 6 ) ] );
-		expect( block.isEnabled.getValue() ).toBe( false );
+	itAsync( "disables", async () => {
+		let block = makeBlock( RectangleBlock, [ 0, Point( 1, 2, 3 ), 10, 20, Color( 0x000000, 1 ), Angle( 4, 5, 6 ) ] );
+		await drainStreams();
+		expect( block.isEnabled ).toBe( 0 );
 	} );
 
-	it( "draws a rectangle", () => {
-		verify( Point( 1, 2, 3 ), 10, 20, Color( 0x000000, 1 ), Angle( 4, 5, 6 ), "center", "center", 0, 0 );
+	itAsync( "draws a rectangle", async () => {
+		await verify( Point( 1, 2, 3 ), 10, 20, Color( 0x000000, 1 ), Angle( 4, 5, 6 ), "center", "center", 0, 0 );
 	} );
 	
-	it( "draws a transparent rectangle", () => {
-		verify( Point( 6, 5, 4 ), 20, 10, Color( 0xffffff, 0.5 ), Angle( 3, 2, 1 ), "center", "center", 0, 0 );
+	itAsync( "draws a transparent rectangle", async () => {
+		await verify( Point( 6, 5, 4 ), 20, 10, Color( 0xffffff, 0.5 ), Angle( 3, 2, 1 ), "center", "center", 0, 0 );
 	} );
 	
-	it( "draws a textured rectangle", () => {
-		verify( Point( 1, 2, 3 ), 10, 20, Color( 0x000000, 1 ), Angle( 4, 5, 6 ), "center", "center", 0, 0, new THREE.Texture( {} ) );
+	itAsync( "draws a textured rectangle", async () => {
+		await verify( Point( 1, 2, 3 ), 10, 20, Color( 0x000000, 1 ), Angle( 4, 5, 6 ), "center", "center", 0, 0, new THREE.Texture( {} ) );
 	} );
 	
 	const horizontalAnchors = [
@@ -85,23 +89,10 @@ describe( "RectangleBlock", () => {
 
 	for( const verticalAnchor of verticalAnchors ) {
 		for( const horizontalAnchor of horizontalAnchors ) {
-			it( `draws a rectangle anchored (${verticalAnchor.name}, ${horizontalAnchor.name})`, () => {
-				verify( Point( 6, 5, 4 ), 20, 10, Color( 0x00ff00, 0.8 ), Angle( 1, 2, 3 ),
+			itAsync( `draws a rectangle anchored (${verticalAnchor.name}, ${horizontalAnchor.name})`, async () => {
+				await verify( Point( 6, 5, 4 ), 20, 10, Color( 0x00ff00, 0.8 ), Angle( 1, 2, 3 ),
 					verticalAnchor.name, horizontalAnchor.name, horizontalAnchor.value, verticalAnchor.value );
 			} );
 		}
 	}
-	
-	describe( "at runtime", () => {
-		let block = makeBlock( RectangleBlock, [] );
-		block.create3dObjects();
-		
-		for( const input of [ "width", "height", "position", "rotation", "horizontalAnchor", "verticalAnchor" ] ) {
-			it( `changes alignment on new ${input}`, () => {
-				block[ input ].valueHasChanged = true;
-				expect( block.hasAlignmentChanged() ).toBe( true );
-				block[ input ].valueHasChanged = false;
-			} );
-		}
-	} );
 } );

@@ -8,14 +8,14 @@ import { Stream } from "most";
 export abstract class AbstractDrawableBlock extends Block implements Drawable {
 	private interactionBlock: InteractionBlock;
 	protected renderingContext: RenderingContext;
-	protected isEnabled: boolean;
+	protected isEnabled: number;
 	protected objects: THREE.Object3D[];
 
 	constructor( isEnabled: Stream<number> ) {
 		super();
 		this.isDrawable = true;
-		this.isEnabled = false;
-		this.observe( isEnabled.map( ( isEnabled: number ) => this.isEnabled = ( isEnabled !== 0 ) ) );
+		this.isEnabled = 0;
+		this.observe( isEnabled.map( ( isEnabled: number ) => this.isEnabled = isEnabled ) );
 		this.objects = [];
 	}
 
