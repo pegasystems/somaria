@@ -20,7 +20,7 @@
     "@types/three": "0.92.21",
     "rollup": "^0.66.0",
     "rollup-plugin-typescript": "^0.8.1",
-    "three": "^0.96.0",
+    "three": "^0.137.0",
     "typescript": "^3.0.3"
   },
   "devDependencies": {
